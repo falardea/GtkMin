@@ -1,0 +1,13 @@
+/cmake_install.cmake
+/CMakeCache.txt
+/CMakeFiles/
+/GtkMin.cbp
+/Makefile
+/mini_app.gresource.c
+/Testing/
+/target/
+/.cmake/
+/src/version.h
+/resources/style/mini_app_style.css
+/.idea
+/.git

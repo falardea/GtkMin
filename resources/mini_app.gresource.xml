@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+    <gresource prefix="/mini_app">
+        <file preprocess="xml-stripblanks">resources/mini_app.glade</file>
+        <file>resources/style/mini_app_style.css</file>
+    </gresource>
+</gresources>
