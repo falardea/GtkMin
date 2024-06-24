@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION      3.16)
 
-project(GtkMin VERSION          1.2.2  LANGUAGES C CXX)
+project(GtkMin VERSION          0.0.1  LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD                11)
 set(CMAKE_CXX_STANDARD              11)
