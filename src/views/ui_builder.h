@@ -5,6 +5,10 @@
 #ifndef MINI_APP_VIEW_BUILDER_H
 #define MINI_APP_VIEW_BUILDER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <gtk/gtk.h>
 #include "comm.h"
 

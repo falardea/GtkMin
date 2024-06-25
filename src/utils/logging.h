@@ -3,6 +3,9 @@
 */
 #ifndef MINI_APP_LOGGING_H
 #define MINI_APP_LOGGING_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdarg.h>
 #include "../comm.h"
@@ -30,4 +33,7 @@ const char *get_log_level_str(LOGLEVEL level);
  */
 int logging_llprintf(LOGLEVEL level, const char *_format, ...);
 
+#ifdef __cplusplus
+}  /* closing brace for extern "C" */
+#endif
 #endif  /* MINI_APP_LOGGING_H */

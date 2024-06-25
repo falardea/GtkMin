@@ -4,6 +4,10 @@
 
 #ifndef MINI_APP_APP_CTRL_H
 #define MINI_APP_APP_CTRL_H
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 /**
@@ -19,4 +23,7 @@ void app_init(int argc, char **argv);
  */
 void app_finalize(void);
 
+#ifdef __cplusplus
+}  /* closing brace for extern "C" */
+#endif
 #endif  /* MINI_APP_APP_CTRL_H */

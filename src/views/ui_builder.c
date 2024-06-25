@@ -66,8 +66,12 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_do_something_button = GTK_WIDGET(gtk_builder_get_object(builder, "do_something_button"));
    appWidgetsT->w_say_something_entry = GTK_WIDGET(gtk_builder_get_object(builder, "say_something_entry"));
 
+   appWidgetsT->w_composite_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "composite_anchor"));
+
    // ********************************************************************************
-   /* appWidgetsT->w_glade_ID = GTK_WIDGET(gtk_builder_get_object(builder, "glade_ID")); */
+   /*
+    appWidgetsT->w_glade_ID = GTK_WIDGET(gtk_builder_get_object(builder, "glade_ID"));
+    */
 
    // ********************************************************************************
    // signals and bindings

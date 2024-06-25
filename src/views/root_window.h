@@ -4,6 +4,9 @@
 
 #ifndef MINI_APP_APP_VIEW_H
 #define MINI_APP_APP_VIEW_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <gtk/gtk.h>
 

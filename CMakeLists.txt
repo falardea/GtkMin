@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED     ON)
 # Dependencies
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-#pkg_check_modules(deps REQUIRED IMPORTED_TARGET glib-2.0)
+pkg_check_modules(deps REQUIRED IMPORTED_TARGET glib-2.0)
 include_directories(${GTK3_INCLUDE_DIRS})
 link_directories(${GTK3_LIBRARY_DIRS})
 add_definitions(${GTK3_CFLAGS_OTHER})
@@ -78,7 +78,11 @@ set(MY_SOURCES
     src/views/root_child_msgout.c
     src/views/root_child_main_content.h
     src/views/root_child_main_content.c
-    )
+      src/models/tictactoe.c
+      src/models/tictactoe.h
+      src/models/model_device.c
+      src/models/model_device.h
+)
 
 include_directories(${PROJECT_SOURCE_DIR})
 configure_file("${PROJECT_SOURCE_DIR}/version.h.in" "${PROJECT_SOURCE_DIR}/version.h")
@@ -87,7 +91,7 @@ configure_file("${PROJECT_SOURCE_DIR}/version.h.in" "${PROJECT_SOURCE_DIR}/versi
 add_executable(${PROJECT_TARGET} ${MY_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${GRESOURCE_C})
 
 target_include_directories(${PROJECT_TARGET} PUBLIC "${PROJECT_BINARY_DIR}")
-target_link_libraries(${PROJECT_TARGET} ${GTK3_LIBRARIES})
+target_link_libraries(${PROJECT_TARGET} ${GTK3_LIBRARIES} PkgConfig::deps)
 
 set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${GRESOURCE_C} PROPERTIES GENERATED TRUE )
 add_dependencies(${PROJECT_TARGET} mini_app-resource)

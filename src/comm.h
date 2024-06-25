@@ -37,6 +37,9 @@ typedef struct {
    GtkWidget   *w_min_close;
    GtkWidget   *w_do_something_button;
    GtkWidget   *w_say_something_entry;
+
+   GtkWidget   *w_composite_anchor;
+
    /*
     GtkWidget   *w_
     */

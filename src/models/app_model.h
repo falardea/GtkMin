@@ -3,6 +3,9 @@
 */
 #ifndef MINI_APP_APP_MODEL_H
 #define MINI_APP_APP_MODEL_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdbool.h>
 #include "comm.h"
@@ -107,4 +110,7 @@ void set_app_log_level(LOGLEVEL logLevel);
  */
 LOGLEVEL get_app_log_level(void);
 
+#ifdef __cplusplus
+}  /* closing brace for extern "C" */
+#endif
 #endif  /* MINI_APP_APP_MODEL_H */
