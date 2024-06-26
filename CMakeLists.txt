@@ -93,7 +93,7 @@ configure_file("${PROJECT_SOURCE_DIR}/version.h.in" "${PROJECT_SOURCE_DIR}/versi
 add_executable(${PROJECT_TARGET} ${MY_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${GRESOURCE_C})
 
 target_include_directories(${PROJECT_TARGET} PUBLIC "${PROJECT_BINARY_DIR}")
-target_link_libraries(${PROJECT_TARGET} ${GTK3_LIBRARIES} PkgConfig::deps)
+target_link_libraries(${PROJECT_TARGET} ${GTK3_LIBRARIES} PkgConfig::deps m)
 
 set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${GRESOURCE_C} PROPERTIES GENERATED TRUE )
 add_dependencies(${PROJECT_TARGET} mini_app-resource)
