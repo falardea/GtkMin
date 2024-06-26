@@ -67,6 +67,8 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_say_something_entry = GTK_WIDGET(gtk_builder_get_object(builder, "say_something_entry"));
 
    appWidgetsT->w_composite_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "composite_anchor"));
+   appWidgetsT->w_custom_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "custom_anchor"));
+
 
    // ********************************************************************************
    /*

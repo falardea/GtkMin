@@ -3,12 +3,11 @@
 */
 #ifndef MINI_APP_COMMON_DEFS_H
 #define MINI_APP_COMMON_DEFS_H
+#include <gtk/gtk.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <gtk/gtk.h>
-
 #define REALLY_LONG_ISO_TIME_STRING "2000-01-31T12:34:56.789-06:00"
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
@@ -39,6 +38,7 @@ typedef struct {
    GtkWidget   *w_say_something_entry;
 
    GtkWidget   *w_composite_anchor;
+   GtkWidget   *w_custom_anchor;
 
    /*
     GtkWidget   *w_

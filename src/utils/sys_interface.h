@@ -4,12 +4,12 @@
 
 #ifndef MINI_APP_OS_INTERFACE_H
 #define MINI_APP_OS_INTERFACE_H
+#include <stdbool.h>
+#include "comm.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdbool.h>
-#include "comm.h"
 
 RVALUE set_display_env(void);
 

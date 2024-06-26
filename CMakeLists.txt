@@ -82,6 +82,8 @@ set(MY_SOURCES
       src/models/tictactoe.h
       src/models/model_device.c
       src/models/model_device.h
+      src/models/gtkdial.c
+      src/models/gtkdial.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

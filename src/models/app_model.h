@@ -3,13 +3,14 @@
 */
 #ifndef MINI_APP_APP_MODEL_H
 #define MINI_APP_APP_MODEL_H
+#include <stdbool.h>
+#include "comm.h"
+#include "utils/logging.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdbool.h>
-#include "comm.h"
-#include "utils/logging.h"
 
 typedef enum {
    INIT_UNINITIALIZED,

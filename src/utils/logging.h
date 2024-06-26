@@ -3,12 +3,12 @@
 */
 #ifndef MINI_APP_LOGGING_H
 #define MINI_APP_LOGGING_H
+#include <stdarg.h>
+#include "../comm.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdarg.h>
-#include "../comm.h"
 
 // #define LOG_INFO(format, ...) logging_llprintf(LOGLEVEL_INFO, "%s: %s\n", __func__, format __VA_OPT__(,) __VA_ARGS__)
 // #define LOG_DEBUG(format, ...) logging_llprintf(LOGLEVEL_DEBUG, "%s: %s\n", __func__, format __VA_OPT__(,) __VA_ARGS__)

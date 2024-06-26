@@ -4,11 +4,11 @@
 
 #ifndef MINI_APP_APP_VIEW_H
 #define MINI_APP_APP_VIEW_H
+#include <gtk/gtk.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <gtk/gtk.h>
 
 void on_min_close_clicked(__attribute__((unused)) GtkWidget *srcWidget,
                                 __attribute__((unused)) gpointer uData);

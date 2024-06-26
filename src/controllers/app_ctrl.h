@@ -4,11 +4,11 @@
 
 #ifndef MINI_APP_APP_CTRL_H
 #define MINI_APP_APP_CTRL_H
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdbool.h>
 
 /**
  * @brief initialize the application, parsing input arguments and setting application state prior

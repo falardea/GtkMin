@@ -3,11 +3,11 @@
 */
 #ifndef MINI_APP_PARSE_ARGS_H
 #define MINI_APP_PARSE_ARGS_H
+#include "../comm.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "../comm.h"
 
 RVALUE parse_input_args(int argc, char **argv);
 

@@ -5,11 +5,12 @@
 
 #ifndef GTKMIN_TICTACTOE_H_
 #define GTKMIN_TICTACTOE_H_
+#include <glib-object.h>
+#include <gtk/gtk.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <glib-object.h>
-#include <gtk/gtk.h>
 
 /**
  * To explore Gtk Composite structures, we are going through this tutorial:
