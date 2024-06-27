@@ -27,7 +27,7 @@ struct _GtkDial
    GtkWidget   widget;
 
    /* update policy (GTK_UPDATE_[CONTINUOUS|DELAYED|DISCONTINUOUS]) */
-   guint       policy : 2;
+   guint       policy;
 
    /* Button currently pressed or 0 in not pressed */
    guint8      button;

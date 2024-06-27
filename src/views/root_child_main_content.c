@@ -54,9 +54,11 @@ void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
 
    adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 100, 0.01, 0.1, 0));
-   gtk_widget_set_size_request(wdgts->w_custom_anchor, 400, 200);
+//   gtk_widget_set_size_request(wdgts->w_custom_anchor, 400, 200);
    dial = gtk_dial_new (adjustment);
-   gtk_widget_set_size_request(GTK_WIDGET(dial), 100, 100);
-   gtk_container_add(GTK_CONTAINER(wdgts->w_custom_anchor), dial);
+
+   gtk_box_pack_start(GTK_BOX(wdgts->w_custom_anchor), dial, TRUE, TRUE, 10);
+
+//   gtk_container_add(GTK_CONTAINER(wdgts->w_custom_anchor), dial);
    gtk_widget_show(dial);
 }

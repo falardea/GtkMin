@@ -32,7 +32,8 @@ GType tictactoe_get_type(void)
                   NULL, /* class_data */
                   sizeof(Tictactoe),
                   0,
-                  (GInstanceInitFunc) tictactoe_init
+                  (GInstanceInitFunc) tictactoe_init,
+                  NULL
             };
       ttt_type = g_type_register_static(GTK_TYPE_GRID, "Tictactoe", &ttt_info, 0);
    }
