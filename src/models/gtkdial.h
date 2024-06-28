@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2024 Deka Research and Development. All rights reserved.
  * Created by rfalardeau on 6/25/2024.
  *
  * This file is an implementation of the GtkDial from the following tutorial:

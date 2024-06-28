@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2024 Deka Research and Development. All rights reserved.
- * Created by rfalardeau on 6/25/2024. 
+ * Created by rfalardeau on 6/25/2024.
 */
 
 #ifndef GTKMIN_TICTACTOE_H_
