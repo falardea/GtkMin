@@ -9,7 +9,7 @@
 
 void win( GtkWidget *widget, __attribute__((unused)) gpointer data)
 {
-   print_log_level_msgout(LOGLEVEL_DEBUG, "Yay!\n");
+   print_log_level_msgout(LOGLEVEL_DEBUG, "You win!");
    tictactoe_clear (TICTACTOE (widget));
 }
 
@@ -28,7 +28,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
       print_log_level_msgout(LOGLEVEL_DEBUG, "%s", gtk_entry_get_text(GTK_ENTRY(wdgts->w_say_something_entry)));
    } else {
       if (!shown){
-         print_log_level_msgout(LOGLEVEL_DEBUG, "add");
+         print_log_level_msgout(LOGLEVEL_DEBUG, "added tictactoe");
          ttt = tictactoe_new();
          gtk_container_add(GTK_CONTAINER(wdgts->w_composite_anchor), ttt);
          gtk_widget_show(ttt);
@@ -37,7 +37,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
       }
       else
       {
-         print_log_level_msgout(LOGLEVEL_DEBUG, "remove?");
+         print_log_level_msgout(LOGLEVEL_DEBUG, "removed tictactoe");
          gtk_container_foreach(GTK_CONTAINER(wdgts->w_composite_anchor),
                                wipe_children,
                                GTK_CONTAINER(wdgts->w_composite_anchor));
