@@ -76,8 +76,6 @@ static void gtk_dial_class_init(GtkDialClass *klass)
    GObjectClass         *object_class = (GObjectClass *) klass;
    GtkWidgetClass       *widget_class = (GtkWidgetClass *) klass;
 
-   g_print("%s\n", __func__);
-
    parent_class = g_type_class_ref(gtk_widget_get_type());
 
    object_class->dispose = gtk_dial_destroy;  // finalize?
@@ -110,8 +108,6 @@ GtkWidget* gtk_dial_new(GtkAdjustment *adjustment)
 {
    GtkDial *dial;
 
-   g_print("%s\n", __func__);
-
    dial = g_object_new(gtk_dial_get_type(), NULL);
 
    if(!adjustment)
@@ -127,8 +123,6 @@ GtkWidget* gtk_dial_new(GtkAdjustment *adjustment)
 static void gtk_dial_destroy(GObject *object)
 {
    GtkDial *dial;
-
-   g_print("%s\n", __func__);
 
    g_return_if_fail(object != NULL);
    g_return_if_fail(GTK_IS_DIAL(object));
@@ -149,8 +143,6 @@ static void gtk_dial_destroy(GObject *object)
 
 GtkAdjustment* gtk_dial_get_adjustment(GtkDial *dial)
 {
-   g_print("%s\n", __func__);
-
    g_return_val_if_fail(dial != NULL, NULL);
    g_return_val_if_fail(GTK_IS_DIAL(dial), NULL);
 
@@ -159,8 +151,6 @@ GtkAdjustment* gtk_dial_get_adjustment(GtkDial *dial)
 
 void gtk_dial_update_policy(GtkDial *dial, guint8 policy)
 {
-   g_print("%s\n", __func__);
-
    g_return_if_fail(dial != NULL);
    g_return_if_fail(GTK_IS_DIAL(dial));
 
@@ -169,14 +159,13 @@ void gtk_dial_update_policy(GtkDial *dial, guint8 policy)
 
 void gtk_dial_set_adjustment(GtkDial *dial, GtkAdjustment *adjustment)
 {
-   g_print("%s\n", __func__);
-
    g_return_if_fail(dial != NULL);
    g_return_if_fail(GTK_IS_DIAL(dial));
 
    if(dial->adjustment)
    {
-      g_signal_handlers_disconnect_by_func(G_OBJECT(dial->adjustment), NULL, (gpointer) dial);
+      g_signal_handlers_disconnect_by_func(G_OBJECT(dial->adjustment), gtk_dial_adjustment_changed, (gpointer) dial);
+      g_signal_handlers_disconnect_by_func(G_OBJECT(dial->adjustment), gtk_dial_adjustment_value_changed, (gpointer) dial);
       g_object_unref(G_OBJECT(dial->adjustment));
    }
 
@@ -208,8 +197,6 @@ static void gtk_dial_realize(GtkWidget *widget)
    dial = GTK_DIAL(widget);
 
    gtk_widget_get_allocation(widget, &allocations);
-   g_print("%s: gtk_widget_get_allocation -> x/y:(%d.%d) w/h:(%d,%d)\n",
-           __func__, allocations.x, allocations.y, allocations.width, allocations.height);
 
    attributes.x            = allocations.x;
    attributes.y            = allocations.y;
@@ -232,7 +219,6 @@ static void gtk_dial_realize(GtkWidget *widget)
 
 static void gtk_dial_size_request(GtkWidget* widget, GtkOrientation orientation, gint* minimum_size, gint* natural_size)
 {
-   g_print("%s\n", __func__);
    minimum_size = &DIAL_DEFAULT_SIZE;
    natural_size = &DIAL_DEFAULT_SIZE;
 }
@@ -407,8 +393,6 @@ static gboolean gtk_dial_button_press(GtkWidget *widget, GdkEventButton *event)
    gdouble        d_parallel;
    gdouble        d_perpendicular;
 
-   g_print("%s\n", __func__);
-
    g_return_val_if_fail(widget != NULL, FALSE);
    g_return_val_if_fail(GTK_IS_DIAL(widget), FALSE);
    g_return_val_if_fail(event != NULL, FALSE);
@@ -442,8 +426,6 @@ static gboolean gtk_dial_button_press(GtkWidget *widget, GdkEventButton *event)
 static gboolean gtk_dial_button_release(GtkWidget *widget, GdkEventButton *event)
 {
    GtkDial        *dial;
-
-   g_print("%s\n", __func__);
 
    g_return_val_if_fail(widget != NULL, FALSE);
    g_return_val_if_fail(GTK_IS_DIAL(widget), FALSE);
@@ -519,7 +501,6 @@ static gboolean gtk_dial_motion_notify(GtkWidget *widget, GdkEventMotion *event)
       }
       if(mods & mask)
       {
-         g_print("%s: CHECKPOINT: (x,y)=(%d, %d)\n", __func__, x, y);
          gtk_dial_update_mouse(dial, x, y);
       }
    }
@@ -528,8 +509,6 @@ static gboolean gtk_dial_motion_notify(GtkWidget *widget, GdkEventMotion *event)
 
 static gboolean gtk_dial_timer(GtkDial *dial)
 {
-   g_print("%s\n", __func__);
-
    g_return_val_if_fail(dial != NULL, FALSE);
    g_return_val_if_fail(GTK_IS_DIAL(dial), FALSE);
 
@@ -545,8 +524,6 @@ static void gtk_dial_update_mouse(GtkDial *dial, gint x, gint y)
    gint     xc, yc;
    gdouble  old_value;
 
-   g_print("%s: input - (x,y) = (%d, %d)\n", __func__, x, y);
-
    g_return_if_fail(dial != NULL);
    g_return_if_fail(GTK_IS_DIAL(dial));
 
@@ -557,8 +534,6 @@ static void gtk_dial_update_mouse(GtkDial *dial, gint x, gint y)
    old_value = gtk_adjustment_get_value(dial->adjustment);
    dial->curr_angle = atan2(yc - y, x - xc);
 
-   ///// NOTE /////////////////
-   // What're these doing?
    if (dial->curr_angle < -M_PI/2.)
    {
       dial->curr_angle += 2*M_PI;
@@ -572,12 +547,11 @@ static void gtk_dial_update_mouse(GtkDial *dial, gint x, gint y)
       dial->curr_angle = 7.*M_PI/6.;
    }
 
-   gtk_adjustment_set_value(dial->adjustment,
-                            (gtk_adjustment_get_lower(dial->adjustment) +
-                            (7.*M_PI/6. - dial->curr_angle) *
-                            (gtk_adjustment_get_upper(dial->adjustment) -
-                            gtk_adjustment_get_lower(dial->adjustment)) /
-                            4.*M_PI/3.));
+   g_print("%s: xc: %d, yc: %d, (x:%d, y:%d) => atan2(yc-y, xc-x) => %f, ", __func__, xc, yc, x, y, dial->curr_angle);
+   gdouble new_adjustment_value = gtk_adjustment_get_lower(dial->adjustment) +
+         (7.*M_PI/6. - dial->curr_angle) * (gtk_adjustment_get_upper(dial->adjustment) - gtk_adjustment_get_lower(dial->adjustment)) / (4.*M_PI/3.);
+   g_print("new value = %f\n", new_adjustment_value);
+   gtk_adjustment_set_value(dial->adjustment, new_adjustment_value);
 
    if (gtk_adjustment_get_value(dial->adjustment) != old_value)
    {
@@ -599,8 +573,6 @@ static void gtk_dial_update(GtkDial *dial)
 {
    gdouble new_value;
 
-   g_print("%s\n", __func__);
-
    g_return_if_fail(dial != NULL);
    g_return_if_fail(GTK_IS_DIAL(dial));
 
@@ -616,14 +588,19 @@ static void gtk_dial_update(GtkDial *dial)
       new_value = gtk_adjustment_get_upper(dial->adjustment);
    }
 
+   g_print("%s: %f - %f - %f\n", __func__,
+           gtk_adjustment_get_lower(dial->adjustment),
+           gtk_adjustment_get_value(dial->adjustment),
+           gtk_adjustment_get_upper(dial->adjustment));
+
    if (new_value != gtk_adjustment_get_value(dial->adjustment))
    {
       gtk_adjustment_set_value(dial->adjustment, new_value);
       g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value_changed");
    }
 
-   dial->curr_angle = 7.*M_PI/6. - (new_value - gtk_adjustment_get_lower(dial->adjustment) * 4.*M_PI/3. /
-                                                      (gtk_adjustment_get_upper(dial->adjustment) - gtk_adjustment_get_lower(dial->adjustment)));
+   dial->curr_angle = 7.*M_PI/6. - (new_value - gtk_adjustment_get_lower(dial->adjustment)) * 4.*M_PI/3. /
+                                                      (gtk_adjustment_get_upper(dial->adjustment) - gtk_adjustment_get_lower(dial->adjustment));
 
    gtk_widget_queue_draw(GTK_WIDGET(dial));
 }
@@ -631,8 +608,6 @@ static void gtk_dial_update(GtkDial *dial)
 static void gtk_dial_adjustment_changed(GtkAdjustment *adjustment, gpointer data)
 {
    GtkDial        *dial;
-
-   g_print("%s\n", __func__);
 
    g_return_if_fail(adjustment != NULL);
    g_return_if_fail(data != NULL);
