@@ -6,7 +6,16 @@ window {
   color: $light-base-bg;
 }
 
-.custom-widget-style
+box.custom-widget-style
+{
+  label
+  {
+    font-size: 32px;
+  }
+  background-color: $base-border-color;
+}
+
+.dial-style
 {
   background-color: $base-fg;
 }

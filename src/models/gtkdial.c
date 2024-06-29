@@ -6,13 +6,14 @@
 #include <glib-object.h>
 #include "gtkdial.h"
 
+#include "views/root_child_msgout.h"
+
 #define SCROLL_DELAY_LENGTH      300
 static gint DIAL_DEFAULT_SIZE = 100;
 
 /* Forward declarations */
 static void       gtk_dial_class_init              (GtkDialClass *klass);
 static void       gtk_dial_init                    (GtkDial *dial);
-static void       gtk_dial_destroy                 (GObject *object);
 static void       gtk_dial_realize                 (GtkWidget *widget);
 static void       gtk_dial_size_request            (GtkWidget* widget,
                                                     GtkOrientation orientation,
@@ -21,7 +22,7 @@ static void       gtk_dial_size_request            (GtkWidget* widget,
 static void       gtk_dial_size_allocate           (GtkWidget *widget,
                                                     GtkAllocation *allocation);
 static gboolean   gtk_dial_draw                    (GtkWidget *widget,
-                                                    cairo_t *context);
+                                                    cairo_t *cr);
 static gboolean   gtk_dial_button_press            (GtkWidget *widget,
                                                     GdkEventButton *event);
 static gboolean   gtk_dial_button_release          (GtkWidget *widget,
@@ -45,6 +46,13 @@ static void       gtk_dial_adjust_size_allocation  (GtkWidget *widget,
                                                     gint *allocated_size);
 /* Local data */
 static GtkWidgetClass *parent_class = NULL;
+
+enum {
+   DIAL_CHANGED_SIGNAL,
+   NUM_DIAL_SIGNALS
+};
+
+static guint gtk_dial_signals[NUM_DIAL_SIGNALS] = { 0 };
 
 GType gtk_dial_get_type()
 {
@@ -86,6 +94,15 @@ static void gtk_dial_class_init(GtkDialClass *klass)
    widget_class->button_press_event = gtk_dial_button_press;
    widget_class->button_release_event = gtk_dial_button_release;
    widget_class->motion_notify_event = gtk_dial_motion_notify;
+
+   gtk_dial_signals[DIAL_CHANGED_SIGNAL] = g_signal_new("dial-changed",
+                                                        G_TYPE_FROM_CLASS(klass),
+                                                        G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                                                        G_STRUCT_OFFSET (GtkDialClass , dial_changed),
+                                                        NULL,
+                                                        NULL,
+                                                        g_cclosure_marshal_VOID__DOUBLE,
+                                                        G_TYPE_NONE, 1, G_TYPE_DOUBLE);
 }
 
 static void gtk_dial_init(GtkDial *dial)
@@ -119,7 +136,7 @@ GtkWidget* gtk_dial_new(GtkAdjustment *adjustment)
    return GTK_WIDGET(dial);
 }
 
-static void gtk_dial_destroy(GObject *object)
+void gtk_dial_destroy(GObject *object)
 {
    GtkDial *dial;
 
@@ -172,7 +189,7 @@ void gtk_dial_set_adjustment(GtkDial *dial, GtkAdjustment *adjustment)
    g_object_ref(G_OBJECT(dial->adjustment));
    g_signal_connect(G_OBJECT(dial->adjustment), "changed", G_CALLBACK(gtk_dial_adjustment_changed),
                     (gpointer) dial);
-   g_signal_connect(G_OBJECT(dial->adjustment), "value_changed", G_CALLBACK(gtk_dial_adjustment_value_changed),
+   g_signal_connect(G_OBJECT(dial->adjustment), "value-changed", G_CALLBACK(gtk_dial_adjustment_value_changed),
                     (gpointer) dial);
 
    dial->old_value = gtk_adjustment_get_value(adjustment);
@@ -321,7 +338,7 @@ static gboolean gtk_dial_draw(GtkWidget *widget, cairo_t *cr)
 
    gtk_render_background(context, cr, 0, 0, width, height);
    gtk_render_frame(context, cr, 0, 0, width, height);
-   gtk_style_context_add_class(gtk_widget_get_style_context(widget), "custom-widget-style");
+   gtk_style_context_add_class(gtk_widget_get_style_context(widget), "dial-style");
 
    xc = gtk_widget_get_allocated_width(widget) / 2;
    yc = gtk_widget_get_allocated_height(widget) / 2;
@@ -415,10 +432,10 @@ static gboolean gtk_dial_button_release(GtkWidget *widget, GdkEventButton *event
       {
          g_source_remove(dial->ud_timer);
       }
-
-      if (dial->policy != GTK_UPDATE_ALWAYS && dial->old_value != gtk_adjustment_get_value(dial->adjustment))
+      if (dial->policy == GTK_UPDATE_ALWAYS && dial->old_value != gtk_adjustment_get_value(dial->adjustment))
       {
-         g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value_changed");
+         g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value-changed");
+         g_signal_emit(G_OBJECT(dial), gtk_dial_signals[DIAL_CHANGED_SIGNAL], 0, gtk_adjustment_get_value(dial->adjustment));
       }
    }
 
@@ -482,7 +499,8 @@ static gboolean gtk_dial_timer(GtkDial *dial)
 
    if (dial->policy != GTK_UPDATE_ALWAYS)
    {
-      g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value_changed");
+      g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value-changed");
+      g_signal_emit(G_OBJECT(dial), gtk_dial_signals[DIAL_CHANGED_SIGNAL], 0, gtk_adjustment_get_value(dial->adjustment));
    }
    return FALSE;
 }
@@ -523,7 +541,8 @@ static void gtk_dial_update_mouse(GtkDial *dial, gint x, gint y)
    {
       if (dial->policy == GTK_UPDATE_ALWAYS)
       {
-         g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value_changed");
+         g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value-changed");
+         g_signal_emit(G_OBJECT(dial), gtk_dial_signals[DIAL_CHANGED_SIGNAL], 0, new_adjustment_value);
       }
       else
       {
@@ -557,7 +576,9 @@ static void gtk_dial_update(GtkDial *dial)
    if (new_value != gtk_adjustment_get_value(dial->adjustment))
    {
       gtk_adjustment_set_value(dial->adjustment, new_value);
-      g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value_changed");
+
+      g_signal_emit_by_name(G_OBJECT(dial->adjustment), "value-changed");
+      g_signal_emit(G_OBJECT(dial), gtk_dial_signals[DIAL_CHANGED_SIGNAL], 0, new_value);
    }
 
    dial->curr_angle = 7.*M_PI/6. - (new_value - gtk_adjustment_get_lower(dial->adjustment)) * 4.*M_PI/3. /

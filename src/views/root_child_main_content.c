@@ -2,10 +2,10 @@
  * Created by french on 6/19/24.
 */
 #include <gtk/gtk.h>
-#include "root_child_msgout.h"
+#include "comm.h"
 #include "models/tictactoe.h"
 #include "models/gtkdial.h"
-
+#include "views/root_child_msgout.h"
 
 void win( GtkWidget *widget, __attribute__((unused)) gpointer data)
 {
@@ -46,18 +46,40 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    }
 }
 
+void on_dial_change(GtkWidget *wdgt, double value, gpointer user_data)
+{
+   app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
+
+   char dial_value_str[32];
+   snprintf(dial_value_str, sizeof (dial_value_str), "%3.1f", value);
+   gtk_label_set_label(GTK_LABEL(wdgts->w_dial_listener_label), dial_value_str);
+}
+
 void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
 {
-   GtkWidget      *dial;
    GtkAdjustment  *adjustment;
 
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
 
+   if (wdgts->w_the_dial != NULL)
+   {
+      print_log_level_msgout(LOGLEVEL_DEBUG, "destroying old dial");
+      gtk_widget_destroy(wdgts->w_the_dial);
+   }
+
    adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 100, 0.01, 0.1, 0));
 
-   dial = gtk_dial_new (adjustment);
+   print_log_level_msgout(LOGLEVEL_DEBUG, "building new dial");
+   wdgts->w_the_dial = gtk_dial_new (adjustment);
 
-   gtk_box_pack_start(GTK_BOX(wdgts->w_custom_anchor), dial, TRUE, TRUE, 10);
+   gtk_box_pack_start(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_the_dial, TRUE, TRUE, 10);
 
-   gtk_widget_show(dial);
+
+   gtk_widget_show(wdgts->w_dial_listener_label);
+   gtk_widget_show(wdgts->w_the_dial);
+
+   g_signal_connect (G_OBJECT(wdgts->w_the_dial),
+                     "dial-changed",
+                     G_CALLBACK(on_dial_change),
+                     wdgts);
 }

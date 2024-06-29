@@ -54,6 +54,8 @@ struct _GtkDial
 struct _GtkDialClass
 {
    GtkWidgetClass parent_class;
+
+   void (*dial_changed) (GtkDial *dial, gdouble value);
 };
 
 GtkWidget*        gtk_dial_new               (GtkAdjustment *adjustment);
@@ -65,6 +67,7 @@ void              gtk_dial_set_update_policy (GtkDial *dial,
 void              gtk_dial_set_adjustment    (GtkDial *dial,
                                               GtkAdjustment *adjustment);
 
+void              gtk_dial_destroy           (GObject *object);
 #ifdef __cplusplus
 }  /* closing brace for extern "C" */
 #endif

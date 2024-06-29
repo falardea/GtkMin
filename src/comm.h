@@ -40,6 +40,9 @@ typedef struct {
    GtkWidget   *w_composite_anchor;
    GtkWidget   *w_custom_anchor;
 
+   GtkWidget   *w_the_dial;
+   GtkWidget   *w_dial_listener_label;
+
    /*
     GtkWidget   *w_
     */
