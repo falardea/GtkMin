@@ -84,6 +84,8 @@ set(MY_SOURCES
       src/models/model_device.h
       src/models/gtkdial.c
       src/models/gtkdial.h
+      src/models/scalar_display.c
+      src/models/scalar_display.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})
