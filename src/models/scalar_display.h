@@ -49,6 +49,7 @@ GtkWidget*           scalar_display_new            (const char* scalar_name,
                                                     const char* format_str,
                                                     gdouble lo_limit,
                                                     gdouble hi_limit);
+//GType                scalar_display_get_type       (GObject obj);
 
 gchar                *scalar_display_get_name_str   (ScalarDisplay *self);
 void                 scalar_display_set_name_str   (ScalarDisplay *self, const char* name);

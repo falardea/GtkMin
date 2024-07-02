@@ -276,6 +276,11 @@ void scalar_display_set_value(ScalarDisplay *self, gdouble new_value)
 {
    g_return_if_fail(SCALAR_IS_DISPLAY(self));
    self->value = new_value;
+
+   char value_str[28];
+   snprintf(value_str, sizeof (value_str), self->format_str, self->value);
+   gtk_label_set_label(GTK_LABEL(self->value_label), value_str);
+
    // In case there's something listening/bound?
    // g_object_notify_by_pspec(G_OBJECT(self), scalar_display_properties[SCALAR_DISPLAY_PROP_VALUE]);
 }
