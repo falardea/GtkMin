@@ -46,7 +46,7 @@ GType scalar_display_get_type()
                   (GInstanceInitFunc) scalar_display_init,
                   NULL
             };
-      scalar_type = g_type_register_static(GTK_TYPE_WIDGET, "ScalarDisplay", &scalar_info, 0);
+      scalar_type = g_type_register_static(GTK_TYPE_BOX, "ScalarDisplay", &scalar_info, 0);
    }
    return scalar_type;
 }
@@ -74,7 +74,7 @@ static void scalar_display_set_property(GObject *object, guint prop_id, const GV
          scalar_display_set_hi_limit(scalar, g_value_get_double( value ) );
          break;
       case SCALAR_DISPLAY_PROP_STR_FORMAT:
-         scalar_display_set_str_format(scalar, g_value_get_string( value ));
+         scalar_display_set_format_str(scalar, g_value_get_string( value ));
          break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
@@ -103,7 +103,7 @@ static void scalar_display_get_property(GObject *object, guint prop_id, GValue *
          g_value_set_double(value, scalar_display_get_hi_limit(scalar));
          break;
       case SCALAR_DISPLAY_PROP_STR_FORMAT:
-         g_value_set_string(value, scalar_display_get_str_format(scalar));
+         g_value_set_string(value, scalar_display_get_format_str(scalar));
          break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
@@ -128,7 +128,6 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, name_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, value_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, units_label);
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: >>>>>>>>> post load from resource", __func__);
 
    gobject_class->finalize = scalar_display_finalize;
 
@@ -162,7 +161,6 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
 /////////////////// INSTANCE //////////////////////////////
 static void scalar_display_init(ScalarDisplay *self)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    gtk_widget_init_template(GTK_WIDGET(self));
 }
 
@@ -177,12 +175,15 @@ GtkWidget* scalar_display_new(const char* scalar_name,
 
    if(scalar_name && strcmp(scalar_name,"") != 0)
    {
+      logging_llprintf(LOGLEVEL_DEBUG, "%s >>>>>>>>>>> setting name to %s", __func__, scalar_name);
       scalar_display_set_name_str(scalar, scalar_name);
    }
    else
    {
       scalar_display_set_name_str(scalar, "UNNAMED");
    }
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: scalar->name = %s", __func__, scalar->name_str);
+   gtk_label_set_label(GTK_LABEL(scalar->name_label), scalar->name_str);
 
    if(scalar_units && strcmp(scalar_units,"") != 0)
    {
@@ -192,29 +193,31 @@ GtkWidget* scalar_display_new(const char* scalar_name,
    {
       scalar_display_set_units_str(scalar, "UOM");
    }
+   gtk_label_set_label(GTK_LABEL(scalar->units_label), scalar->units_str);
 
    if(format_str && strcmp(format_str, "") != 0)
    {
-      scalar_display_set_str_format(scalar, format_str);
+      scalar_display_set_format_str(scalar, format_str);
    }
    else
    {
-      scalar_display_set_str_format(scalar, "%f");
+      scalar_display_set_format_str(scalar, "%f");
    }
 
    scalar_display_set_lo_limit(scalar, lo_limit);
    scalar_display_set_hi_limit(scalar, hi_limit);
 
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: self->name = %s", __func__, scalar_display_get_name_str(scalar));
+
    return GTK_WIDGET(scalar);
 }
 
 static void scalar_display_finalize( GObject *self )
 {
    ScalarDisplay *scalar = SCALAR_DISPLAY(self );
-   g_free(scalar->name);
-   g_free(scalar->units);
-   g_free(scalar->str_format);
+   g_free(scalar->name_str);
+   g_free(scalar->units_str);
+   g_free(scalar->format_str);
 //   GObjectClass *parent_class = G_OBJECT_CLASS( scalar_display_parent_class );
 //   ( *parent_class->finalize )( self );
 }
@@ -222,43 +225,46 @@ static void scalar_display_finalize( GObject *self )
 gchar *scalar_display_get_name_str (ScalarDisplay *self)
 {
    g_return_val_if_fail(SCALAR_IS_DISPLAY(self), NULL);
-   return g_strdup(self->name);
+   return g_strdup(self->name_str);
 }
 void scalar_display_set_name_str (ScalarDisplay *self, const char* name)
 {
    g_return_if_fail(name);
    g_return_if_fail(SCALAR_IS_DISPLAY(self));
-   if(self->name != NULL)
-      g_free(self->name);
-   self->name = g_strdup(name);
+   if(self->name_str != NULL)
+   {
+      g_free(self->name_str);
+   }
+   self->name_str = g_strdup(name);
+   logging_llprintf(LOGLEVEL_DEBUG, ">>>>>>>>>>>>>> self->name = %s", self->name_str);
 }
 
 gchar *scalar_display_get_units_str (ScalarDisplay *self)
 {
    g_return_val_if_fail(SCALAR_IS_DISPLAY(self), NULL);
-   return g_strdup(self->units);
+   return g_strdup(self->units_str);
 }
 void  scalar_display_set_units_str (ScalarDisplay *self, const char* units)
 {
    g_return_if_fail(units);
    g_return_if_fail(SCALAR_IS_DISPLAY(self));
-   if(self->units != NULL)
-      g_free(self->units);
-   self->units = g_strdup(units);
+   if(self->units_str != NULL)
+      g_free(self->units_str);
+   self->units_str = g_strdup(units);
 }
 
-const char* scalar_display_get_str_format(ScalarDisplay *self)
+const char* scalar_display_get_format_str(ScalarDisplay *self)
 {
    g_return_val_if_fail(SCALAR_IS_DISPLAY(self), NULL);
-   return g_strdup(self->str_format);
+   return g_strdup(self->format_str);
 }
-void scalar_display_set_str_format(ScalarDisplay *self, const char* disp_format)
+void scalar_display_set_format_str(ScalarDisplay *self, const char* disp_format)
 {
    g_return_if_fail(disp_format);
    g_return_if_fail(SCALAR_IS_DISPLAY(self));
-   if(self->str_format != NULL)
-      g_free(self->str_format);
-   self->name = g_strdup(disp_format);
+   if(self->format_str != NULL)
+      g_free(self->format_str);
+   self->format_str = g_strdup(disp_format);
 }
 
 gdouble scalar_display_get_value(ScalarDisplay *self)

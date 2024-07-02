@@ -68,7 +68,7 @@ void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
       gtk_widget_destroy(wdgts->w_the_dial);
    }
 
-   if (wdgts->w_scalar_display_anchor != NULL)
+   if (wdgts->w_the_scalar_display != NULL)
    {
       print_log_level_msgout(LOGLEVEL_DEBUG, "destroying old scalar display");
       gtk_widget_destroy(wdgts->w_scalar_display_anchor);
@@ -88,6 +88,7 @@ void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
    gtk_widget_show(wdgts->w_dial_listener_label);
    gtk_widget_show(wdgts->w_the_dial);
    gtk_widget_show(wdgts->w_the_scalar_display);
+   gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(wdgts->w_the_scalar_display)), "scalar_display");
 
    g_signal_connect (G_OBJECT(wdgts->w_the_dial),
                      "dial-changed",

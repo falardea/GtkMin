@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
-  <template class="ScalarDisplay" parent="GtkWidget">
+  <template class="ScalarDisplay" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>

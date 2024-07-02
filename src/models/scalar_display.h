@@ -23,25 +23,23 @@ typedef struct _ScalarDisplayClass     ScalarDisplayClass;
 
 struct _ScalarDisplay
 {
-   GObject        parent_object;
-   GtkBox         *gbox;
+   GtkBox         gbox;
    GtkLabel       *name_label;
    GtkLabel       *value_label;
    GtkLabel       *units_label;
 
-   gchar          *name;
-   gchar          *units;
-   gchar          *str_format;
+   gchar          *name_str;
+   gchar          *units_str;
+   gchar          *format_str;
 
    gdouble        value;
    gdouble        lo_limit;
    gdouble        hi_limit;
-
 };
 
 struct _ScalarDisplayClass
 {
-   GtkWidgetClass parent_class;
+   GtkBoxClass parent_class;
 
    void (*scalar_display_clicked)(ScalarDisplay *scalar);  // When the user clicks/touches
 };
@@ -67,8 +65,8 @@ void                 scalar_display_set_lo_limit   (ScalarDisplay *self, gdouble
 gdouble              scalar_display_get_hi_limit   (ScalarDisplay *self);
 void                 scalar_display_set_hi_limit   (ScalarDisplay *self, gdouble new_hi_limit);
 
-const char*          scalar_display_get_str_format (ScalarDisplay *self);
-void                 scalar_display_set_str_format (ScalarDisplay *self, const char* disp_format);
+const char*          scalar_display_get_format_str (ScalarDisplay *self);
+void                 scalar_display_set_format_str (ScalarDisplay *self, const char* disp_format);
 
 G_END_DECLS
 #ifdef __cplusplus
