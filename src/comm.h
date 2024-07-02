@@ -39,10 +39,13 @@ typedef struct {
 
    GtkWidget   *w_composite_anchor;
    GtkWidget   *w_custom_anchor;
+   GtkWidget   *w_scalar_display_anchor;
+
 
    GtkWidget   *w_the_dial;
    GtkWidget   *w_dial_listener_label;
 
+   GtkWidget   *w_the_scalar_display;
    /*
     GtkWidget   *w_
     */

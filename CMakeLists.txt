@@ -50,6 +50,7 @@ add_custom_command(
       MAIN_DEPENDENCY ${PROJECT_RESOURCE_DIR}/${GRESOURCE_XML}
       DEPENDS
       ${PROJECT_RESOURCE_DIR}/mini_app.glade
+      ${PROJECT_RESOURCE_DIR}/scalar_display_template.glade
       ${CSS_OUTFILE}
 )
 add_custom_target(mini_app-resource DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GRESOURCE_C})

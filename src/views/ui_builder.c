@@ -68,11 +68,14 @@ app_widget_ref_struct *app_builder(void) {
 
    appWidgetsT->w_composite_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "composite_anchor"));
    appWidgetsT->w_custom_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "custom_anchor"));
+   appWidgetsT->w_scalar_display_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "scalar_display_anchor"));
+
 
    appWidgetsT->w_dial_listener_label = GTK_WIDGET(gtk_builder_get_object(builder, "dial_listener_label"));
 
    // This is a placeholder, intending to have one instance
    appWidgetsT->w_the_dial = NULL;
+   appWidgetsT->w_the_scalar_display = NULL;
 
    // ********************************************************************************
    /*

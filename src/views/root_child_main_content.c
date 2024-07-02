@@ -5,6 +5,7 @@
 #include "comm.h"
 #include "models/tictactoe.h"
 #include "models/gtkdial.h"
+#include "models/scalar_display.h"
 #include "views/root_child_msgout.h"
 
 void win( GtkWidget *widget, __attribute__((unused)) gpointer data)
@@ -67,16 +68,26 @@ void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
       gtk_widget_destroy(wdgts->w_the_dial);
    }
 
+   if (wdgts->w_scalar_display_anchor != NULL)
+   {
+      print_log_level_msgout(LOGLEVEL_DEBUG, "destroying old scalar display");
+      gtk_widget_destroy(wdgts->w_scalar_display_anchor);
+   }
+
    adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 100, 0.01, 0.1, 0));
 
    print_log_level_msgout(LOGLEVEL_DEBUG, "building new dial");
    wdgts->w_the_dial = gtk_dial_new (adjustment);
 
-   gtk_box_pack_start(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_the_dial, TRUE, TRUE, 10);
+   print_log_level_msgout(LOGLEVEL_DEBUG, "building new scalar display");
+   wdgts->w_the_scalar_display = scalar_display_new("pressure", "psi", "%2.1f", 0.0, 100.0);
 
+   gtk_box_pack_start(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_the_dial, TRUE, TRUE, 10);
+   gtk_box_pack_end(GTK_BOX(wdgts->w_scalar_display_anchor), wdgts->w_the_scalar_display, TRUE, TRUE, 10);
 
    gtk_widget_show(wdgts->w_dial_listener_label);
    gtk_widget_show(wdgts->w_the_dial);
+   gtk_widget_show(wdgts->w_the_scalar_display);
 
    g_signal_connect (G_OBJECT(wdgts->w_the_dial),
                      "dial-changed",
