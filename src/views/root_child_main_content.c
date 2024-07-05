@@ -6,6 +6,7 @@
 #include "models/tictactoe.h"
 #include "models/gtkdial.h"
 #include "models/scalar_display.h"
+#include "utils/logging.h"
 #include "views/root_child_msgout.h"
 
 void win( GtkWidget *widget, __attribute__((unused)) gpointer data)
@@ -61,19 +62,22 @@ void on_dial_change(GtkWidget *wdgt, double value, gpointer user_data)
 void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
 {
    GtkAdjustment  *adjustment;
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: CHECKPOINT", __func__);
 
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
 
    if (wdgts->w_the_dial != NULL)
    {
-      print_log_level_msgout(LOGLEVEL_DEBUG, "destroying old dial");
+      logging_llprintf(LOGLEVEL_DEBUG, "destroying old dial");
       gtk_widget_destroy(wdgts->w_the_dial);
    }
 
    if (wdgts->w_the_scalar_display != NULL)
    {
-      print_log_level_msgout(LOGLEVEL_DEBUG, "destroying old scalar display");
-      gtk_widget_destroy(wdgts->w_scalar_display_anchor);
+      logging_llprintf(LOGLEVEL_DEBUG, "destroying old scalar display");
+      gtk_widget_destroy(wdgts->w_the_scalar_display);
+      // g_object_unref(wdgts->w_the_scalar_display);
+      // wdgts->w_the_scalar_display = NULL;
    }
 
    adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 100, 0.01, 0.1, 0));

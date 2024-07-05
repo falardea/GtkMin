@@ -10,20 +10,24 @@ extern "C" {
 #endif
 
 G_BEGIN_DECLS
-/*
-#define SCALAR_TYPE_DISPLAY              ( scalar_display_get_type( ) )
-G_DECLARE_FINAL_TYPE(ScalarDisplay, scalar_diaplay, SCALAR, DISPLAY, GObject)
-*/
 
-#define SCALAR_DISPLAY(obj)            G_TYPE_CHECK_INSTANCE_CAST(obj, scalar_display_get_type(), ScalarDisplay)
-#define SCALAR_DISPLAY_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST(klass, scalar_display_get_type(), ScalarDisplayClass)
-#define SCALAR_IS_DISPLAY(obj)         G_TYPE_CHECK_INSTANCE_TYPE(obj, scalar_display_get_type())
+// #define SCALAR_TYPE_DISPLAY              ( scalar_display_get_type( ) )
+// G_DECLARE_FINAL_TYPE(ScalarDisplay, scalar_diaplay, SCALAR, DISPLAY, GtkBox)
+
+#define SCALAR_TYPE_DISPLAY            ( scalar_display_get_type () )
+#define SCALAR_DISPLAY(obj)            ( G_TYPE_CHECK_INSTANCE_CAST ( (obj), scalar_display_get_type (), ScalarDisplay ))
+#define SCALAR_DISPLAY_CLASS(klass)    ( G_TYPE_CHECK_CLASS_CAST ( (klass) , scalar_display_get_type (), ScalarDisplayClass ))
+#define SCALAR_IS_DISPLAY(obj)         ( G_TYPE_CHECK_INSTANCE_TYPE ( (obj) , scalar_display_get_type () ))
+#define SCALAR_IS_DISPLAY_CLASS(klass) ( G_TYPE_CHECK_CLASS_TYPE ( (klass) , SCALAR_TYPE_DISPLAY ))
+#define SCALAR_DISPLAY_GET_CLASS(obj)  ( G_TYPE_INSTANCE_GET_CLASS ( (obj), SCALAR_TYPE_DISPLAY, ScalarDisplayClass ))
+
 typedef struct _ScalarDisplay          ScalarDisplay;
 typedef struct _ScalarDisplayClass     ScalarDisplayClass;
 
 struct _ScalarDisplay
 {
-   GtkBox         gbox;
+   GtkBox         parent;
+   GtkBox         *gbox;  // parent-GObject?
    GtkLabel       *name_label;
    GtkLabel       *value_label;
    GtkLabel       *units_label;

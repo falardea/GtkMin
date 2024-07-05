@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2024
- * Created by rfalardeau on 7/1/2024. 
+ * Created by rfalardeau on 7/1/2024.
 */
 #include <glib-object.h>
 #include <math.h>
@@ -22,7 +22,6 @@ enum {
    SCALAR_DISPLAY_PROP_STR_FORMAT,
    SCALAR_DISPLAY_N_PROPERTIES
 };
-
 
 //G_DEFINE_TYPE(ScalarDisplay, scalar_display, G_TYPE_OBJECT)
 static void scalar_display_class_init(ScalarDisplayClass *klass);
@@ -46,11 +45,13 @@ GType scalar_display_get_type()
                   (GInstanceInitFunc) scalar_display_init,
                   NULL
             };
+      // Note the parent type here and "parent/root" define in the instance and class structs
       scalar_type = g_type_register_static(GTK_TYPE_BOX, "ScalarDisplay", &scalar_info, 0);
    }
    return scalar_type;
 }
 
+// static void scalar_display_dispose( GObject *self );
 static void scalar_display_finalize( GObject *self );
 
 static void scalar_display_set_property(GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
@@ -113,15 +114,14 @@ static void scalar_display_get_property(GObject *object, guint prop_id, GValue *
 static GParamSpec *scalar_display_properties[SCALAR_DISPLAY_N_PROPERTIES] = {NULL, };
 static guint scalar_display_signals[SCALAR_DISPLAY_N_SIGNALS] = { 0 };
 
-
-//static GtkWidgetClass *parent_class = NULL;
+// static GtkWidgetClass *parent_class = NULL;
 static void scalar_display_class_init(ScalarDisplayClass *klass)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
 
-//   parent_class = g_type_class_ref(gtk_widget_get_type());
+   // parent_class = g_type_class_ref(gtk_widget_get_type());
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/mini_app/resources/scalar_display_template.glade");
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, gbox);
@@ -129,6 +129,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, value_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, units_label);
 
+   // gobject_class->dispose = scalar_display_dispose;
    gobject_class->finalize = scalar_display_finalize;
 
    gobject_class->get_property = scalar_display_get_property;
@@ -182,7 +183,6 @@ GtkWidget* scalar_display_new(const char* scalar_name,
    {
       scalar_display_set_name_str(scalar, "UNNAMED");
    }
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: scalar->name = %s", __func__, scalar->name_str);
    gtk_label_set_label(GTK_LABEL(scalar->name_label), scalar->name_str);
 
    if(scalar_units && strcmp(scalar_units,"") != 0)
@@ -207,20 +207,41 @@ GtkWidget* scalar_display_new(const char* scalar_name,
    scalar_display_set_lo_limit(scalar, lo_limit);
    scalar_display_set_hi_limit(scalar, hi_limit);
 
-   logging_llprintf(LOGLEVEL_DEBUG, "%s: self->name = %s", __func__, scalar_display_get_name_str(scalar));
-
    return GTK_WIDGET(scalar);
 }
 
+
 static void scalar_display_finalize( GObject *self )
 {
+   g_return_if_fail(self != NULL);
+   g_return_if_fail(SCALAR_IS_DISPLAY(self));
    ScalarDisplay *scalar = SCALAR_DISPLAY(self );
-   g_free(scalar->name_str);
-   g_free(scalar->units_str);
-   g_free(scalar->format_str);
-//   GObjectClass *parent_class = G_OBJECT_CLASS( scalar_display_parent_class );
-//   ( *parent_class->finalize )( self );
+
+   if (scalar->name_str != NULL) g_free(scalar->name_str);
+   if (scalar->units_str != NULL) g_free(scalar->units_str);
+   if (scalar->format_str != NULL) g_free(scalar->format_str);
+
+   GObjectClass *parent_class = G_OBJECT_CLASS( SCALAR_DISPLAY_GET_CLASS(scalar) );
+   logging_llprintf(LOGLEVEL_DEBUG, "object instance finalize");
+
+   // ( *parent_class->finalize )( self );
 }
+
+/*
+ *
+ */
+// static void scalar_display_dispose( GObject *self )
+// {
+//    g_return_if_fail(self != NULL);
+//    g_return_if_fail(SCALAR_IS_DISPLAY(self));
+//
+//    ScalarDisplay *scalar = SCALAR_DISPLAY( self );
+//
+//    if (G_OBJECT_CLASS(SCALAR_DISPLAY_GET_CLASS(scalar))->dispose)
+//    {
+//       (* G_OBJECT_CLASS (SCALAR_DISPLAY_GET_CLASS(scalar))->dispose) (self);
+//    }
+// }
 
 gchar *scalar_display_get_name_str (ScalarDisplay *self)
 {
