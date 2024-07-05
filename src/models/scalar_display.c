@@ -24,8 +24,8 @@ enum {
 };
 
 //G_DEFINE_TYPE(ScalarDisplay, scalar_display, G_TYPE_OBJECT)
-static void scalar_display_class_init(ScalarDisplayClass *klass);
-static void scalar_display_init(ScalarDisplay *self);
+static void scalar_display_class_init(ScalarDisplayClass *klass, gpointer class_data);
+static void scalar_display_init(ScalarDisplay *self, gpointer g_class);
 
 GType scalar_display_get_type()
 {
@@ -115,7 +115,7 @@ static GParamSpec *scalar_display_properties[SCALAR_DISPLAY_N_PROPERTIES] = {NUL
 static guint scalar_display_signals[SCALAR_DISPLAY_N_SIGNALS] = { 0 };
 
 // static GtkWidgetClass *parent_class = NULL;
-static void scalar_display_class_init(ScalarDisplayClass *klass)
+static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((unused))  gpointer class_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
@@ -160,7 +160,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
 }
 
 /////////////////// INSTANCE //////////////////////////////
-static void scalar_display_init(ScalarDisplay *self)
+static void scalar_display_init(ScalarDisplay *self,__attribute__((unused))  gpointer g_class)
 {
    gtk_widget_init_template(GTK_WIDGET(self));
 }

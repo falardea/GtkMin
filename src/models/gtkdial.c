@@ -9,16 +9,18 @@
 #include "views/root_child_msgout.h"
 
 #define SCROLL_DELAY_LENGTH      300
-static gint DIAL_DEFAULT_SIZE = 100;
+// static gint DIAL_DEFAULT_SIZE = 100;
 
 /* Forward declarations */
-static void       gtk_dial_class_init              (GtkDialClass *klass);
-static void       gtk_dial_init                    (GtkDial *dial);
+static void       gtk_dial_class_init              (GtkDialClass *klass,
+                                                    gpointer class_data);
+static void       gtk_dial_init                    (GtkDial *dial,
+                                                    gpointer g_class);
 static void       gtk_dial_realize                 (GtkWidget *widget);
-static void       gtk_dial_size_request            (GtkWidget* widget,
-                                                    GtkOrientation orientation,
-                                                    gint* minimum_size,
-                                                    gint* natural_size);
+// static void       gtk_dial_size_request            (GtkWidget* widget,
+//                                                     GtkOrientation orientation,
+//                                                     gint* minimum_size,
+//                                                     gint* natural_size);
 static void       gtk_dial_size_allocate           (GtkWidget *widget,
                                                     GtkAllocation *allocation);
 static gboolean   gtk_dial_draw                    (GtkWidget *widget,
@@ -72,7 +74,7 @@ GType gtk_dial_get_type()
    return dial_type;
 }
 
-static void gtk_dial_class_init(GtkDialClass *klass)
+static void gtk_dial_class_init(GtkDialClass *klass,__attribute__((unused)) gpointer class_data)
 {
    GObjectClass         *object_class = (GObjectClass *) klass;
    GtkWidgetClass       *widget_class = (GtkWidgetClass *) klass;
@@ -83,7 +85,6 @@ static void gtk_dial_class_init(GtkDialClass *klass)
 
    widget_class->realize = gtk_dial_realize;
    widget_class->draw = gtk_dial_draw;
-   widget_class->adjust_size_request = gtk_dial_size_request;
    widget_class->size_allocate = gtk_dial_size_allocate;
    widget_class->button_press_event = gtk_dial_button_press;
    widget_class->button_release_event = gtk_dial_button_release;
@@ -99,7 +100,7 @@ static void gtk_dial_class_init(GtkDialClass *klass)
                                                         G_TYPE_NONE, 1, G_TYPE_DOUBLE);
 }
 
-static void gtk_dial_init(GtkDial *dial)
+static void gtk_dial_init(GtkDial *dial,__attribute__((unused))  gpointer g_class)
 {
    dial->button = 0;
    dial->policy = GTK_UPDATE_ALWAYS;
@@ -224,12 +225,6 @@ static void gtk_dial_realize(GtkWidget *widget)
    gtk_widget_set_window(widget,gdk_window_new(gtk_widget_get_parent_window(widget), &attributes, attributes_mask));
 
    gdk_window_set_user_data (gtk_widget_get_window(widget), widget);
-}
-
-static void gtk_dial_size_request(GtkWidget* widget, GtkOrientation orientation, gint* minimum_size, gint* natural_size)
-{
-   minimum_size = &DIAL_DEFAULT_SIZE;
-   natural_size = &DIAL_DEFAULT_SIZE;
 }
 
 static void gtk_dial_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
@@ -506,7 +501,7 @@ static void gtk_dial_update_mouse(GtkDial *dial, gint x, gint y)
    g_return_if_fail(dial != NULL);
    g_return_if_fail(GTK_IS_DIAL(dial));
 
-   GtkAllocation allocation;
+   // GtkAllocation allocation;
    xc = gtk_widget_get_allocated_width(GTK_WIDGET(dial)) / 2;
    yc = gtk_widget_get_allocated_height(GTK_WIDGET(dial)) / 2;
 

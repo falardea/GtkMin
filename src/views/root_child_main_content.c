@@ -48,7 +48,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    }
 }
 
-void on_dial_change(GtkWidget *wdgt, double value, gpointer user_data)
+void on_dial_change(__attribute__((unused)) GtkWidget *wdgt, double value, gpointer user_data)
 {
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
 
@@ -56,10 +56,10 @@ void on_dial_change(GtkWidget *wdgt, double value, gpointer user_data)
    snprintf(dial_value_str, sizeof (dial_value_str), "%3.1f", value);
    gtk_label_set_label(GTK_LABEL(wdgts->w_dial_listener_label), dial_value_str);
 
-   scalar_display_set_value(wdgts->w_the_scalar_display, value);
+   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), value);
 }
 
-void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
+void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    GtkAdjustment  *adjustment;
    logging_llprintf(LOGLEVEL_DEBUG, "%s: CHECKPOINT", __func__);
@@ -96,7 +96,7 @@ void on_do_something_else_button_clicked(GtkButton *button, gpointer user_data)
    gtk_widget_show(wdgts->w_the_scalar_display);
    gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(wdgts->w_the_scalar_display)), "scalar_display");
 
-   scalar_display_set_value(wdgts->w_the_scalar_display, 20.1);
+   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), 20.1);
 
    g_signal_connect (G_OBJECT(wdgts->w_the_dial),
                      "dial-changed",

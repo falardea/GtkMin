@@ -9,8 +9,10 @@ enum {
    NUM_TICTACTOE_SIGNALS
 };
 
-static void tictactoe_class_init          (TictactoeClass   *klass);
-static void tictactoe_init                (Tictactoe        *ttt);
+static void tictactoe_class_init          (TictactoeClass   *klass,
+                                           gpointer class_data);
+static void tictactoe_init                (Tictactoe        *ttt,
+                                           gpointer g_class);
 static void tictactoe_toggle              (GtkWidget *widget, Tictactoe *ttt);
 
 static guint tictactoe_signals[NUM_TICTACTOE_SIGNALS] = { 0 };
@@ -39,7 +41,7 @@ GType tictactoe_get_type(void)
    return ttt_type;
 }
 
-static void tictactoe_class_init(TictactoeClass *klass)
+static void tictactoe_class_init(TictactoeClass *klass,__attribute__((unused)) gpointer class_data)
 {
    tictactoe_signals[TICTACTOE_SIGNAL] = g_signal_new("tictactoe",
                                                       G_TYPE_FROM_CLASS(klass),
@@ -51,7 +53,7 @@ static void tictactoe_class_init(TictactoeClass *klass)
                                                       G_TYPE_NONE, 0);
 }
 
-static void tictactoe_init(Tictactoe *ttt)
+static void tictactoe_init(Tictactoe *ttt,__attribute__((unused)) gpointer g_class)
 {
    gint i, j;
 

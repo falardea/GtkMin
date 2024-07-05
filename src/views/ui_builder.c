@@ -8,16 +8,18 @@
 
 gboolean transform_toggle_label_on_off(GBinding *src, const GValue *fromValue,  __attribute__((unused)) GValue *toValue,
                                        __attribute__((unused)) gpointer user_data) {
-   GtkToggleButton *tbutton = (GtkToggleButton *) g_binding_get_source(src);
+   // GtkToggleButton *tbutton = (GtkToggleButton *) g_binding_get_source(src);
+   GtkToggleButton *tbutton = (GtkToggleButton *) g_binding_dup_source(src);
    if (tbutton != NULL) {
       gboolean active = g_value_get_boolean(fromValue);
       gtk_button_set_label(GTK_BUTTON(tbutton), active ? "ON" : "OFF");
-//      g_object_unref(tbutton);
+     g_object_unref(tbutton);
       return TRUE;
    }
    return FALSE;
 }
 
+__attribute__((unused))
 static void bind_toggle_active_label_swap(GtkToggleButton *tbutton)
 {
    g_object_bind_property_full(tbutton, "active",
@@ -27,12 +29,13 @@ static void bind_toggle_active_label_swap(GtkToggleButton *tbutton)
                                NULL,NULL, NULL);
 }
 
+__attribute__((unused))
 static void bind_toggle_src_active_tar_sensitive(GtkToggleButton *src, GtkWidget *tar)
 {
    g_object_bind_property(src, "active", tar, "sensitive", G_BINDING_DEFAULT);
 }
 
-void genericWidgetSetup(gpointer widget, gpointer user_data)
+void genericWidgetSetup(gpointer widget, __attribute__((unused)) gpointer user_data)
 {
 //   app_widget_ref_struct *app_wdgts = (app_widget_ref_struct*) user_data;
    if (GTK_IS_WIDGET(widget)){
