@@ -79,15 +79,15 @@ set(MY_SOURCES
     src/views/root_child_msgout.c
     src/views/root_child_main_content.h
     src/views/root_child_main_content.c
-      src/models/tictactoe.c
-      src/models/tictactoe.h
-      src/models/model_device.c
-      src/models/model_device.h
-      src/models/gtkdial.c
-      src/models/gtkdial.h
-      src/models/scalar_display.c
-      src/models/scalar_display.h
-)
+    src/models/tictactoe.c
+    src/models/tictactoe.h
+    src/models/model_device.c
+    src/models/model_device.h
+    src/models/gtkdial.c
+    src/models/gtkdial.h
+    src/models/scalar_display.c
+    src/models/scalar_display.h
+    src/models/numeric_label.c src/models/numeric_label.h)
 
 include_directories(${PROJECT_SOURCE_DIR})
 configure_file("${PROJECT_SOURCE_DIR}/version.h.in" "${PROJECT_SOURCE_DIR}/version.h")

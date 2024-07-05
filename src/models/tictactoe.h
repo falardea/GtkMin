@@ -7,15 +7,11 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * To explore Gtk Composite structures, we are going through this tutorial:
  * https://www.geany.org/manual/gtk/gtk-tutorial/x2202.html
  */
-G_BEGIN_DECLS
+G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 #define TICTACTOE_TYPE              (tictactoe_get_type ())
 #define TICTACTOE(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), tictactoe_get_type(), Tictactoe))
@@ -42,7 +38,4 @@ GtkWidget*     tictactoe_new              (void);
 void           tictactoe_clear            (Tictactoe *ttt);
 
 G_END_DECLS
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
 #endif  // GTKMIN_TICTACTOE_H_

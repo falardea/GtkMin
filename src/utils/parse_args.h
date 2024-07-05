@@ -3,15 +3,11 @@
 */
 #ifndef MINI_APP_PARSE_ARGS_H
 #define MINI_APP_PARSE_ARGS_H
-#include "../comm.h"
+#include "comm.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 RVALUE parse_input_args(int argc, char **argv);
 
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
+G_END_DECLS
 #endif  /* MINI_APP_PARSE_ARGS_H */

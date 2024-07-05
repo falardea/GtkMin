@@ -5,11 +5,8 @@
 #ifndef GTKMIN_SCALAR_DISPLAY_H_
 #define GTKMIN_SCALAR_DISPLAY_H_
 #include <gtk/gtk.h>
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-G_BEGIN_DECLS
+G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 // #define SCALAR_TYPE_DISPLAY              ( scalar_display_get_type( ) )
 // G_DECLARE_FINAL_TYPE(ScalarDisplay, scalar_diaplay, SCALAR, DISPLAY, GtkBox)
@@ -74,7 +71,4 @@ const char*          scalar_display_get_format_str (ScalarDisplay *self);
 void                 scalar_display_set_format_str (ScalarDisplay *self, const char* disp_format);
 
 G_END_DECLS
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
 #endif  // GTKMIN_SCALAR_DISPLAY_H_

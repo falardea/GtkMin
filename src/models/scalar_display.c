@@ -221,10 +221,9 @@ static void scalar_display_finalize( GObject *self )
    if (scalar->units_str != NULL) g_free(scalar->units_str);
    if (scalar->format_str != NULL) g_free(scalar->format_str);
 
-   GObjectClass *parent_class = G_OBJECT_CLASS( SCALAR_DISPLAY_GET_CLASS(scalar) );
-   logging_llprintf(LOGLEVEL_DEBUG, "object instance finalize");
-
+   // GObjectClass *parent_class = G_OBJECT_CLASS( SCALAR_DISPLAY_GET_CLASS(scalar) );
    // ( *parent_class->finalize )( self );
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
 
 /*
@@ -257,7 +256,6 @@ void scalar_display_set_name_str (ScalarDisplay *self, const char* name)
       g_free(self->name_str);
    }
    self->name_str = g_strdup(name);
-   logging_llprintf(LOGLEVEL_DEBUG, ">>>>>>>>>>>>>> self->name = %s", self->name_str);
 }
 
 gchar *scalar_display_get_units_str (ScalarDisplay *self)

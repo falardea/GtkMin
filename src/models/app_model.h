@@ -7,10 +7,7 @@
 #include "comm.h"
 #include "utils/logging.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 typedef enum {
    INIT_UNINITIALIZED,
@@ -111,7 +108,5 @@ void set_app_log_level(LOGLEVEL logLevel);
  */
 LOGLEVEL get_app_log_level(void);
 
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
+G_END_DECLS
 #endif  /* MINI_APP_APP_MODEL_H */

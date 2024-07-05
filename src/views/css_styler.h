@@ -6,13 +6,9 @@
 #define MINI_APP_CSS_STYLER_H
 #include "ui_builder.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 void apply_app_styling(app_widget_ref_struct *appWidgetsT);
 
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
+G_END_DECLS
 #endif  // MINI_APP_CSS_STYLER_H

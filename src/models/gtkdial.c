@@ -38,12 +38,6 @@ static void       gtk_dial_adjustment_changed      (GtkAdjustment *adjustment,
 static void       gtk_dial_adjustment_value_changed(GtkAdjustment *adjustment,
                                                     gpointer data);
 
-static void       gtk_dial_adjust_size_allocation  (GtkWidget *widget,
-                                                    GtkOrientation orientation,
-                                                    gint *minimum_size,
-                                                    gint *natural_size,
-                                                    gint *allocated_pos,
-                                                    gint *allocated_size);
 /* Local data */
 static GtkWidgetClass *parent_class = NULL;
 
@@ -201,7 +195,6 @@ void gtk_dial_set_adjustment(GtkDial *dial, GtkAdjustment *adjustment)
 
 static void gtk_dial_realize(GtkWidget *widget)
 {
-   GtkDial        *dial;
    GdkWindowAttr  attributes;
    GtkAllocation  allocations;
    gint           attributes_mask;
@@ -210,7 +203,7 @@ static void gtk_dial_realize(GtkWidget *widget)
    g_return_if_fail(GTK_IS_DIAL(widget));
 
    gtk_widget_set_realized(widget, TRUE);
-   dial = GTK_DIAL(widget);
+   // GtkDial *dial = GTK_DIAL(widget);
 
    gtk_widget_get_allocation(widget, &allocations);
 
@@ -224,7 +217,7 @@ static void gtk_dial_realize(GtkWidget *widget)
          GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK |
          GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
          GDK_POINTER_MOTION_HINT_MASK;
-   // GTK2 has a attributes.colormap, but may have been packed them into visual in GTK3
+   // GTK2 has an attributes.colormap, but may have been packed them into visual in GTK3
    attributes.visual       = gtk_widget_get_visual(widget);
 
    attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
@@ -259,7 +252,7 @@ static void gtk_dial_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
    dial->pointer_width = dial->radius / 5;
 }
 
-static gboolean gtk_dial_draw_dial_ticks(GtkWidget *widget, cairo_t *cr)
+static void gtk_dial_draw_dial_ticks(GtkWidget *widget, cairo_t *cr)
 {
    GtkDial        *dial;
    gint           xcalc, ycalc;
@@ -269,9 +262,9 @@ static gboolean gtk_dial_draw_dial_ticks(GtkWidget *widget, cairo_t *cr)
    gint           tick_length;
    gdouble        upper, lower;
 
-   g_return_val_if_fail(widget != NULL, FALSE);
-   g_return_val_if_fail(GTK_IS_DIAL(widget), FALSE);
-   g_return_val_if_fail(cr != NULL, FALSE);
+   g_return_if_fail(widget != NULL);
+   g_return_if_fail(GTK_IS_DIAL(widget));
+   g_return_if_fail(cr != NULL);
 
    dial = GTK_DIAL(widget);
 
@@ -283,7 +276,7 @@ static gboolean gtk_dial_draw_dial_ticks(GtkWidget *widget, cairo_t *cr)
 
    if ((upper - lower) == 0)
    {
-      return FALSE;
+      return;
    }
 
    increment = (100 * M_PI) / (dial->radius * dial->radius);

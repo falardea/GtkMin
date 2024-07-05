@@ -13,12 +13,8 @@
 #define GTKSANDBOX_MODEL_DEVICE_H
 #include <glib-object.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* include any other dependencies for this object here - ie, different types */
-G_BEGIN_DECLS
+G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 /* our GObject declaration */
 
@@ -36,8 +32,4 @@ gboolean model_device_get_enabled( ModelDevice *self );
 void model_device_set_enabled( ModelDevice *self, gboolean enabled );
 
 G_END_DECLS
-
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
 #endif  /* GTKSANDBOX_MODEL_DEVICE_H */

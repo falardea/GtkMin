@@ -4,10 +4,10 @@
 #ifndef MINI_APP_COMMON_DEFS_H
 #define MINI_APP_COMMON_DEFS_H
 #include <gtk/gtk.h>
+#include <glib-object.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS // C++ guard, from gmacros.h
+
 #define REALLY_LONG_ISO_TIME_STRING "2000-01-31T12:34:56.789-06:00"
 #define DEFAULT_TIMESTAMP_LOG_FORMAT "%04d-%02d-%02dT%02d:%02d:%02d"
 
@@ -54,7 +54,5 @@ typedef struct {
 
 extern app_widget_ref_struct *g_app_widget_refs;
 
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
+G_END_DECLS
 #endif  /* MINI_APP_COMMON_DEFS_H */

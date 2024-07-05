@@ -3,13 +3,8 @@
 */
 #ifndef GTKMIN_ROOT_CHILD_MAIN_CONTENT_H_
 #define GTKMIN_ROOT_CHILD_MAIN_CONTENT_H_
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "comm.h"
+G_BEGIN_DECLS
 
-
-
-#ifdef __cplusplus
-}  // closing brace for extern "C"
-#endif
+G_END_DECLS
 #endif  // GTKMIN_ROOT_CHILD_MAIN_CONTENT_H_

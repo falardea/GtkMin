@@ -10,9 +10,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 #define GTK_DIAL(obj)               G_TYPE_CHECK_INSTANCE_CAST(obj, gtk_dial_get_type(), GtkDial)
 #define GTK_DIAL_CLASS(klass)       G_TYPE_CHECK_CLASS_CAST(klass, gtk_dial_get_type(), GtkDialClass)
@@ -68,7 +66,6 @@ void              gtk_dial_set_adjustment    (GtkDial *dial,
                                               GtkAdjustment *adjustment);
 
 void              gtk_dial_destroy           (GObject *object);
-#ifdef __cplusplus
-}  /* closing brace for extern "C" */
-#endif
+
+G_END_DECLS
 #endif  // GTKMIN_GTKDIAL_H_
