@@ -163,6 +163,11 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
 static void scalar_display_init(ScalarDisplay *self,__attribute__((unused))  gpointer g_class)
 {
    gtk_widget_init_template(GTK_WIDGET(self));
+   scalar_display_set_name_str(self, "UNNAMED");
+   scalar_display_set_units_str(self, "UOM");
+   scalar_display_set_format_str(self, "%f");
+   scalar_display_set_lo_limit(self, -INFINITY);
+   scalar_display_set_hi_limit(self, INFINITY);
 }
 
 GtkWidget* scalar_display_new(const char* scalar_name,
@@ -179,29 +184,17 @@ GtkWidget* scalar_display_new(const char* scalar_name,
       logging_llprintf(LOGLEVEL_DEBUG, "%s >>>>>>>>>>> setting name to %s", __func__, scalar_name);
       scalar_display_set_name_str(scalar, scalar_name);
    }
-   else
-   {
-      scalar_display_set_name_str(scalar, "UNNAMED");
-   }
    gtk_label_set_label(GTK_LABEL(scalar->name_label), scalar->name_str);
 
    if(scalar_units && strcmp(scalar_units,"") != 0)
    {
       scalar_display_set_units_str(scalar, scalar_units);
    }
-   else
-   {
-      scalar_display_set_units_str(scalar, "UOM");
-   }
    gtk_label_set_label(GTK_LABEL(scalar->units_label), scalar->units_str);
 
    if(format_str && strcmp(format_str, "") != 0)
    {
       scalar_display_set_format_str(scalar, format_str);
-   }
-   else
-   {
-      scalar_display_set_format_str(scalar, "%f");
    }
 
    scalar_display_set_lo_limit(scalar, lo_limit);

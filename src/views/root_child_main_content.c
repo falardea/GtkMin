@@ -8,6 +8,9 @@
 #include "models/scalar_display.h"
 #include "utils/logging.h"
 #include "views/root_child_msgout.h"
+#include "models/numeric_label.h"
+
+const double DIAL_INIT_VALUE = 0.0;
 
 void win( GtkWidget *widget, __attribute__((unused)) gpointer data)
 {
@@ -52,10 +55,7 @@ void on_dial_change(__attribute__((unused)) GtkWidget *wdgt, double value, gpoin
 {
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
 
-   char dial_value_str[32];
-   snprintf(dial_value_str, sizeof (dial_value_str), "%3.1f", value);
-   gtk_label_set_label(GTK_LABEL(wdgts->w_dial_listener_label), dial_value_str);
-
+   numeric_label_set_value(NUMERIC_LABEL(wdgts->w_dial_listener_label), value);
    scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), value);
 }
 
@@ -66,37 +66,30 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
 
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
 
-   if (wdgts->w_the_dial != NULL)
-   {
-      logging_llprintf(LOGLEVEL_DEBUG, "destroying old dial");
-      gtk_widget_destroy(wdgts->w_the_dial);
-   }
+   if (wdgts->w_the_dial != NULL) gtk_widget_destroy(wdgts->w_the_dial);
+   if (wdgts->w_the_scalar_display != NULL) gtk_widget_destroy(wdgts->w_the_scalar_display);
+   if (wdgts->w_dial_listener_label != NULL) gtk_widget_destroy(wdgts->w_dial_listener_label);
 
-   if (wdgts->w_the_scalar_display != NULL)
-   {
-      logging_llprintf(LOGLEVEL_DEBUG, "destroying old scalar display");
-      gtk_widget_destroy(wdgts->w_the_scalar_display);
-      // g_object_unref(wdgts->w_the_scalar_display);
-      // wdgts->w_the_scalar_display = NULL;
-   }
+   adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (DIAL_INIT_VALUE, 0, 100, 0.01, 0.1, 0));
 
-   adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 100, 0.01, 0.1, 0));
-
-   print_log_level_msgout(LOGLEVEL_DEBUG, "building new dial");
    wdgts->w_the_dial = gtk_dial_new (adjustment);
+   wdgts->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, "%1.1f");
+   wdgts->w_the_scalar_display = scalar_display_new("pressure", "psi", "%1.1f", 0.0, 100.0);
 
-   print_log_level_msgout(LOGLEVEL_DEBUG, "building new scalar display");
-   wdgts->w_the_scalar_display = scalar_display_new("pressure", "psi", "%2.1f", 0.0, 100.0);
+   // Should this be part of the "new"
+   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), DIAL_INIT_VALUE);
 
    gtk_box_pack_start(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_the_dial, TRUE, TRUE, 10);
+   gtk_box_pack_end(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_dial_listener_label, FALSE, TRUE, 0);
    gtk_box_pack_end(GTK_BOX(wdgts->w_scalar_display_anchor), wdgts->w_the_scalar_display, TRUE, TRUE, 10);
 
    gtk_widget_show(wdgts->w_dial_listener_label);
    gtk_widget_show(wdgts->w_the_dial);
    gtk_widget_show(wdgts->w_the_scalar_display);
+
    gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(wdgts->w_the_scalar_display)), "scalar_display");
 
-   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), 20.1);
+
 
    g_signal_connect (G_OBJECT(wdgts->w_the_dial),
                      "dial-changed",
