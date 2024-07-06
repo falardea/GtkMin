@@ -181,7 +181,6 @@ GtkWidget* scalar_display_new(const char* scalar_name,
 
    if(scalar_name && strcmp(scalar_name,"") != 0)
    {
-      logging_llprintf(LOGLEVEL_DEBUG, "%s >>>>>>>>>>> setting name to %s", __func__, scalar_name);
       scalar_display_set_name_str(scalar, scalar_name);
    }
    gtk_label_set_label(GTK_LABEL(scalar->name_label), scalar->name_str);
@@ -199,6 +198,8 @@ GtkWidget* scalar_display_new(const char* scalar_name,
 
    scalar_display_set_lo_limit(scalar, lo_limit);
    scalar_display_set_hi_limit(scalar, hi_limit);
+
+   gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(scalar)), "scalar_display");
 
    return GTK_WIDGET(scalar);
 }
@@ -218,22 +219,6 @@ static void scalar_display_finalize( GObject *self )
    // ( *parent_class->finalize )( self );
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
-
-/*
- *
- */
-// static void scalar_display_dispose( GObject *self )
-// {
-//    g_return_if_fail(self != NULL);
-//    g_return_if_fail(SCALAR_IS_DISPLAY(self));
-//
-//    ScalarDisplay *scalar = SCALAR_DISPLAY( self );
-//
-//    if (G_OBJECT_CLASS(SCALAR_DISPLAY_GET_CLASS(scalar))->dispose)
-//    {
-//       (* G_OBJECT_CLASS (SCALAR_DISPLAY_GET_CLASS(scalar))->dispose) (self);
-//    }
-// }
 
 gchar *scalar_display_get_name_str (ScalarDisplay *self)
 {
@@ -306,8 +291,6 @@ void scalar_display_set_lo_limit(ScalarDisplay *self, gdouble new_lo_limit)
 {
    g_return_if_fail(SCALAR_IS_DISPLAY(self));
    self->lo_limit = new_lo_limit;
-   // In case there's something listening/bound?
-   // g_object_notify_by_pspec(G_OBJECT(self), scalar_display_properties[SCALAR_DISPLAY_PROP_LO_LIMIT]);
 }
 
 gdouble scalar_display_get_hi_limit(ScalarDisplay *self)
@@ -319,7 +302,5 @@ void scalar_display_set_hi_limit(ScalarDisplay *self, gdouble new_hi_limit)
 {
    g_return_if_fail(SCALAR_IS_DISPLAY(self));
    self->hi_limit = new_hi_limit;
-   // In case there's something listening/bound?
-   // g_object_notify_by_pspec(G_OBJECT(self), scalar_display_properties[SCALAR_DISPLAY_PROP_HI_LIMIT]);
 }
 

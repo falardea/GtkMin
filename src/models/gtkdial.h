@@ -62,6 +62,9 @@ GtkAdjustment*    gtk_dial_get_adjustment    (GtkDial *dial);
 void              gtk_dial_set_update_policy (GtkDial *dial,
                                               guint8 policy);  // GtkUpdateType?
 
+void              gtk_dial_set_old_value     (GtkDial *dial, gdouble curr_value);
+gdouble           gtk_dial_get_old_value     (GtkDial *dial);
+
 void              gtk_dial_set_adjustment    (GtkDial *dial,
                                               GtkAdjustment *adjustment);
 

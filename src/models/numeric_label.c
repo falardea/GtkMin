@@ -77,12 +77,12 @@ static void numeric_label_class_init(NumericLabelClass *klass)
    gobject_class->finalize = numeric_label_finalize;
    gobject_class->get_property = numeric_label_get_property;
    gobject_class->set_property = numeric_label_set_property;
-   numeric_properties[NUMERIC_LABEL_VALUE_PROP] = g_param_spec_double("value", NULL, NULL,
+   numeric_properties[NUMERIC_LABEL_VALUE_PROP] = g_param_spec_double("value", "value", "value",
                                                                       -INFINITY,
                                                                       INFINITY,
                                                                       0.0,
-                                                                      G_PARAM_READWRITE);
-   numeric_properties[NUMERIC_LABEL_FORMAT_STR_PROP] = g_param_spec_string("format_str", NULL, NULL,
+                                                                      G_PARAM_READWRITE );
+   numeric_properties[NUMERIC_LABEL_FORMAT_STR_PROP] = g_param_spec_string("format_str", "format_str", "format_str",
                                                                            NULL,
                                                                            G_PARAM_READWRITE);
    g_object_class_install_properties(gobject_class, N_PROPERTIES, numeric_properties);
@@ -139,6 +139,9 @@ void numeric_label_set_value(NumericLabel *self, gdouble new_value)
    char value_str[28];
    snprintf(value_str, sizeof (value_str), self->format_str, self->value);
    gtk_label_set_label(GTK_LABEL(self->label_ref), value_str);
+
+   // In case there's something listening/bound?
+   g_object_notify_by_pspec(G_OBJECT(self), numeric_properties[NUMERIC_LABEL_VALUE_PROP]);
 }
 
 gchar *numeric_label_get_format_str(NumericLabel *self)

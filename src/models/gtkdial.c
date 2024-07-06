@@ -48,7 +48,14 @@ enum {
    NUM_DIAL_SIGNALS
 };
 
+enum {
+   PROP_0, // reserved for GObject
+   GTK_DIAL_PROP_OLD_VALUE,
+   GTK_DIAL_N_PROPERTIES
+};
+
 static guint gtk_dial_signals[NUM_DIAL_SIGNALS] = { 0 };
+static GParamSpec *gtk_dial_properties[GTK_DIAL_N_PROPERTIES] = {NULL, };
 
 GType gtk_dial_get_type()
 {
@@ -74,6 +81,33 @@ GType gtk_dial_get_type()
    return dial_type;
 }
 
+static void gtk_dial_set_property(GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+{
+   GtkDial *dial = GTK_DIAL(object);
+
+   switch(prop_id){
+      case GTK_DIAL_PROP_OLD_VALUE:
+         gtk_dial_set_old_value( dial, g_value_get_double ( value ) );
+         break;
+      default:
+         G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
+   }
+
+}
+
+static void gtk_dial_get_property(GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+{
+   GtkDial *dial = GTK_DIAL(object);
+
+   switch (prop_id){
+      case GTK_DIAL_PROP_OLD_VALUE:
+         g_value_set_double(value, gtk_dial_get_old_value(dial));
+         break;
+      default:
+         G_OBJECT_WARN_INVALID_PROPERTY_ID( object, prop_id, pspec );
+   }
+}
+
 static void gtk_dial_class_init(GtkDialClass *klass,__attribute__((unused)) gpointer class_data)
 {
    GObjectClass         *object_class = (GObjectClass *) klass;
@@ -82,6 +116,8 @@ static void gtk_dial_class_init(GtkDialClass *klass,__attribute__((unused)) gpoi
    parent_class = g_type_class_ref(gtk_widget_get_type());
 
    object_class->dispose = gtk_dial_destroy;  // finalize?
+   object_class->get_property = gtk_dial_get_property;
+   object_class->set_property = gtk_dial_set_property;
 
    widget_class->realize = gtk_dial_realize;
    widget_class->draw = gtk_dial_draw;
@@ -90,6 +126,9 @@ static void gtk_dial_class_init(GtkDialClass *klass,__attribute__((unused)) gpoi
    widget_class->button_release_event = gtk_dial_button_release;
    widget_class->motion_notify_event = gtk_dial_motion_notify;
 
+   gtk_dial_properties[GTK_DIAL_PROP_OLD_VALUE] = g_param_spec_double("old_value", "old value", "Last dial value",
+                                                                              -INFINITY, INFINITY, 0, G_PARAM_READWRITE );
+   g_object_class_install_properties( object_class, GTK_DIAL_N_PROPERTIES, gtk_dial_properties);
    gtk_dial_signals[DIAL_CHANGED_SIGNAL] = g_signal_new("dial-changed",
                                                         G_TYPE_FROM_CLASS(klass),
                                                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
@@ -608,6 +647,18 @@ static void gtk_dial_adjustment_value_changed(GtkAdjustment *adjustment, gpointe
    if (dial->old_value != gtk_adjustment_get_value(adjustment))
    {
       gtk_dial_update(dial);
-      dial->old_value = gtk_adjustment_get_value(adjustment);
+      gtk_dial_set_old_value(dial, gtk_adjustment_get_value(adjustment));
    }
+}
+
+void gtk_dial_set_old_value (GtkDial *dial, gdouble curr_value)
+{
+   g_return_if_fail(GTK_IS_DIAL(dial));
+   dial->old_value = curr_value;
+   g_object_notify_by_pspec(G_OBJECT(dial), gtk_dial_properties[GTK_DIAL_PROP_OLD_VALUE]);
+}
+gdouble gtk_dial_get_old_value (GtkDial *dial)
+{
+   g_return_val_if_fail(GTK_IS_DIAL(dial), NAN);
+   return dial->old_value;
 }

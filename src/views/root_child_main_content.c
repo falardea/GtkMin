@@ -51,12 +51,18 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    }
 }
 
+
+
+
+
+
+
 void on_dial_change(__attribute__((unused)) GtkWidget *wdgt, double value, gpointer user_data)
 {
    app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
 
-   numeric_label_set_value(NUMERIC_LABEL(wdgts->w_dial_listener_label), value);
-   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), value);
+   // numeric_label_set_value(NUMERIC_LABEL(wdgts->w_dial_listener_label), value);
+   // scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), value);
 }
 
 void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
@@ -83,13 +89,18 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
    gtk_box_pack_end(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_dial_listener_label, FALSE, TRUE, 0);
    gtk_box_pack_end(GTK_BOX(wdgts->w_scalar_display_anchor), wdgts->w_the_scalar_display, TRUE, TRUE, 10);
 
+   g_object_bind_property(wdgts->w_the_dial, "old_value", wdgts->w_dial_listener_label, "value", G_BINDING_DEFAULT);
+   g_object_bind_property(wdgts->w_dial_listener_label, "value", wdgts->w_the_scalar_display, "value", G_BINDING_DEFAULT);
+
+   // g_object_bind_property_full(wdgts->w_the_dial, "adjustment",
+   //                             wdgts->w_the_scalar_display, "label",
+   //                             G_BINDING_SYNC_CREATE,
+   //                             (GBindingTransformFunc) transform_from_gvalue_to_,
+   //                             NULL,NULL, NULL);
+
    gtk_widget_show(wdgts->w_dial_listener_label);
    gtk_widget_show(wdgts->w_the_dial);
    gtk_widget_show(wdgts->w_the_scalar_display);
-
-   gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(wdgts->w_the_scalar_display)), "scalar_display");
-
-
 
    g_signal_connect (G_OBJECT(wdgts->w_the_dial),
                      "dial-changed",
