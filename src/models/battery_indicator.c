@@ -17,13 +17,6 @@ struct _BatteryIndicator
    guint                event_button;  // the gdk event->button, not a widget
 };
 
-/*struct _BatteryIndicatorClass
-{
-   GtkWidgetClass    parent_class;
-
-   void  (*battery_indicator_pressed) (BatteryIndicator *batt, gdouble value);
-};*/
-
 // It appears that anything that isn't defined as a property is effectively private instance data?
 enum {
    PROP_0,
@@ -31,14 +24,12 @@ enum {
    N_BATTERY_INDICATOR_PROPERTIES
 };
 
-/*enum {
-   BATTERY_INDICATOR_PRESSED_SIGNAL,
+enum {
+   BATTERY_INDICATOR_CUSTOM_SIGNAL,
    N_BATTERY_INDICATOR_SIGNALS
-};*/
+};
 
 G_DEFINE_TYPE(BatteryIndicator, battery_indicator, GTK_TYPE_WIDGET)
-
-//static void       battery_indicator_dispose                 ( GObject *object );
 
 static void       battery_indicator_realize                 (GtkWidget *widget);
 static void       battery_indicator_size_allocate           (GtkWidget *widget,
@@ -49,7 +40,6 @@ static gboolean   battery_indicator_button_press            (GtkWidget *widget,
                                                              GdkEventButton *event);
 static gboolean   battery_indicator_button_release          (GtkWidget *widget,
                                                              GdkEventButton *event);
-static void       battery_indicator_update                  (BatteryIndicator *batt);
 
 static void battery_indicator_set_property( GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
@@ -79,7 +69,6 @@ static void battery_indicator_get_property( GObject *object, guint prop_id, GVal
 }
 
 static GParamSpec *battery_indicator_properties[N_BATTERY_INDICATOR_PROPERTIES] = {NULL, };
-// static guint battery_indicator_signals[N_BATTERY_INDICATOR_SIGNALS] = { 0 };
 
 static void battery_indicator_class_init(BatteryIndicatorClass *klass)
 {
@@ -96,7 +85,6 @@ static void battery_indicator_class_init(BatteryIndicatorClass *klass)
    widget_class->draw = battery_indicator_draw;
    widget_class->size_allocate = battery_indicator_size_allocate;
 
-//   object_class->dispose = battery_indicator_dispose;
    object_class->set_property = battery_indicator_set_property;
    object_class->get_property = battery_indicator_get_property;
    battery_indicator_properties[BATTERY_INDICATOR_VALUE_PROP] = g_param_spec_double("value", NULL, NULL,
@@ -117,19 +105,6 @@ GtkWidget *battery_indicator_new(void)
 {
    return g_object_new(battery_indicator_get_type(), NULL);
 }
-
-//static void battery_indicator_dispose(GObject *object)
-//{
-//   g_return_if_fail(object != NULL);
-//   g_return_if_fail(BATTERY_IS_INDICATOR(object));
-//
-//   logging_llprintf(LOGLEVEL_DEBUG, "%s: not much to do here?", __func__);
-//
-////   if(G_OBJECT_CLASS(parent_class)->dispose)
-////   {
-////      (* G_OBJECT_CLASS (parent_class)->dispose) (object);
-////   }
-//}
 
 gdouble battery_indicator_get_value(BatteryIndicator *batt)
 {
@@ -204,8 +179,8 @@ static gboolean battery_indicator_draw(GtkWidget *widget, cairo_t *cr)
    gtk_style_context_add_class(gtk_widget_get_style_context(widget), "battery-indicator-class");
 
    int pad = 10;
-   cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
-   cairo_set_line_width(cr, 2.0);
+   cairo_set_source_rgba(cr, 0.0, 255, 0.0, 1.0);
+   cairo_set_line_width(cr, 4.0);
    cairo_move_to(cr, pad, pad);
    cairo_line_to(cr, width-pad, pad);
    cairo_line_to(cr, width-pad, height-pad);
