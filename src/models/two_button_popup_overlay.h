@@ -3,8 +3,8 @@
  * Created by rfalardeau on 5/30/2024. 
 */
 
-#ifndef POD_VARISCITE_PROTOTYPE_TWO_BUTTON_POPUP_OVERLAY_H_
-#define POD_VARISCITE_PROTOTYPE_TWO_BUTTON_POPUP_OVERLAY_H_
+#ifndef TWO_BUTTON_POPUP_OVERLAY_H__
+#define TWO_BUTTON_POPUP_OVERLAY_H__
 #include "comm.h"
 
 typedef struct
@@ -33,4 +33,4 @@ void build_and_show_two_button_prompt(app_widget_ref_struct *app_wdgts,
 
 void temp_popup_launcher(app_widget_ref_struct *wdgts);
 
-#endif  // POD_VARISCITE_PROTOTYPE_TWO_BUTTON_POPUP_OVERLAY_H_
+#endif  // TWO_BUTTON_POPUP_OVERLAY_H__

@@ -91,7 +91,8 @@ set(MY_SOURCES
       src/models/numeric_label.h
       src/models/battery_indicator.c
       src/models/battery_indicator.h
-
+      src/models/two_button_popup_overlay.h
+      src/models/two_button_popup_overlay.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR})
