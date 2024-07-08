@@ -1,7 +1,6 @@
 /*
  * Created by french on 7/5/24.
 */
-#include <gtk/gtk.h>
 #include <math.h>
 #include "numeric_label.h"
 #include "../utils/logging.h"
@@ -24,7 +23,7 @@ enum {
    PROP_O,
    NUMERIC_LABEL_VALUE_PROP,
    NUMERIC_LABEL_FORMAT_STR_PROP,
-   N_PROPERTIES
+   N_NUMERIC_LABEL_PROPERTIES
 };
 
 G_DEFINE_TYPE(NumericLabel, numeric_label, GTK_TYPE_BIN )
@@ -62,7 +61,7 @@ static void numeric_label_get_property( GObject *object, guint prop_id, GValue *
    }
 }
 
-static GParamSpec *numeric_properties[N_PROPERTIES] = {NULL, };
+static GParamSpec *numeric_properties[N_NUMERIC_LABEL_PROPERTIES] = {NULL, };
 
 static void numeric_label_class_init(NumericLabelClass *klass)
 {
@@ -78,14 +77,14 @@ static void numeric_label_class_init(NumericLabelClass *klass)
    gobject_class->get_property = numeric_label_get_property;
    gobject_class->set_property = numeric_label_set_property;
    numeric_properties[NUMERIC_LABEL_VALUE_PROP] = g_param_spec_double("value", "value", "value",
-                                                                      -INFINITY,
-                                                                      INFINITY,
+                                                                      -G_MINDOUBLE,
+                                                                      G_MAXDOUBLE,
                                                                       0.0,
                                                                       G_PARAM_READWRITE );
    numeric_properties[NUMERIC_LABEL_FORMAT_STR_PROP] = g_param_spec_string("format_str", "format_str", "format_str",
                                                                            NULL,
                                                                            G_PARAM_READWRITE);
-   g_object_class_install_properties(gobject_class, N_PROPERTIES, numeric_properties);
+   g_object_class_install_properties(gobject_class, N_NUMERIC_LABEL_PROPERTIES, numeric_properties);
 }
 
 //// Instance ////////////

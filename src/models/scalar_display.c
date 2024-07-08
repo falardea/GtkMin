@@ -9,7 +9,7 @@
 
 enum {
    SCALAR_DISPLAY_CLICKED_SIGNAL,
-   SCALAR_DISPLAY_N_SIGNALS
+   N_SCALAR_DISPLAY_SIGNALS
 };
 
 enum {
@@ -20,7 +20,7 @@ enum {
    SCALAR_DISPLAY_PROP_LO_LIMIT,
    SCALAR_DISPLAY_PROP_HI_LIMIT,
    SCALAR_DISPLAY_PROP_STR_FORMAT,
-   SCALAR_DISPLAY_N_PROPERTIES
+   N_SCALAR_DISPLAY_PROPERTIES
 };
 
 //G_DEFINE_TYPE(ScalarDisplay, scalar_display, G_TYPE_OBJECT)
@@ -111,8 +111,8 @@ static void scalar_display_get_property(GObject *object, guint prop_id, GValue *
    }
 }
 
-static GParamSpec *scalar_display_properties[SCALAR_DISPLAY_N_PROPERTIES] = {NULL, };
-static guint scalar_display_signals[SCALAR_DISPLAY_N_SIGNALS] = { 0 };
+static GParamSpec *scalar_display_properties[N_SCALAR_DISPLAY_PROPERTIES] = {NULL, };
+static guint scalar_display_signals[N_SCALAR_DISPLAY_SIGNALS] = { 0 };
 
 // static GtkWidgetClass *parent_class = NULL;
 static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((unused))  gpointer class_data)
@@ -148,7 +148,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
    scalar_display_properties[SCALAR_DISPLAY_PROP_UNITS_STR] = g_param_spec_string("units_str", "scalar units", "The scalar units",
                                                                                   NULL, G_PARAM_READWRITE );
 
-   g_object_class_install_properties( gobject_class, SCALAR_DISPLAY_N_PROPERTIES, scalar_display_properties);
+   g_object_class_install_properties( gobject_class, N_SCALAR_DISPLAY_PROPERTIES, scalar_display_properties);
    scalar_display_signals[SCALAR_DISPLAY_CLICKED_SIGNAL] = g_signal_new("scalar-clicked",
                                                                         G_TYPE_FROM_CLASS(klass),
                                                                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,

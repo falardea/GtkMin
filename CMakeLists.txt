@@ -87,7 +87,7 @@ set(MY_SOURCES
     src/models/gtkdial.h
     src/models/scalar_display.c
     src/models/scalar_display.h
-    src/models/numeric_label.c src/models/numeric_label.h)
+    src/models/numeric_label.c src/models/numeric_label.h src/models/battery_indicator.c src/models/battery_indicator.h)
 
 include_directories(${PROJECT_SOURCE_DIR})
 configure_file("${PROJECT_SOURCE_DIR}/version.h.in" "${PROJECT_SOURCE_DIR}/version.h")

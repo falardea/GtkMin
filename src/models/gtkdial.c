@@ -51,11 +51,11 @@ enum {
 enum {
    PROP_0, // reserved for GObject
    GTK_DIAL_PROP_OLD_VALUE,
-   GTK_DIAL_N_PROPERTIES
+   N_GTK_DIAL_PROPERTIES
 };
 
 static guint gtk_dial_signals[NUM_DIAL_SIGNALS] = { 0 };
-static GParamSpec *gtk_dial_properties[GTK_DIAL_N_PROPERTIES] = {NULL, };
+static GParamSpec *gtk_dial_properties[N_GTK_DIAL_PROPERTIES] = {NULL, };
 
 GType gtk_dial_get_type()
 {
@@ -127,8 +127,8 @@ static void gtk_dial_class_init(GtkDialClass *klass,__attribute__((unused)) gpoi
    widget_class->motion_notify_event = gtk_dial_motion_notify;
 
    gtk_dial_properties[GTK_DIAL_PROP_OLD_VALUE] = g_param_spec_double("old_value", "old value", "Last dial value",
-                                                                              -INFINITY, INFINITY, 0, G_PARAM_READWRITE );
-   g_object_class_install_properties( object_class, GTK_DIAL_N_PROPERTIES, gtk_dial_properties);
+                                                                              -G_MINDOUBLE, G_MAXDOUBLE, 0, G_PARAM_READWRITE );
+   g_object_class_install_properties( object_class, N_GTK_DIAL_PROPERTIES, gtk_dial_properties);
    gtk_dial_signals[DIAL_CHANGED_SIGNAL] = g_signal_new("dial-changed",
                                                         G_TYPE_FROM_CLASS(klass),
                                                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,

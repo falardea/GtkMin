@@ -19,7 +19,7 @@ enum
    PROP_0, // Reserved for GObject
    PROP_ENABLED,
    PROP_DEVICE_NAME,
-   N_PROPERTIES
+   N_MODEL_DEVICE_PROPERTIES
 };
 
 static void model_device_finalize( GObject *self );
@@ -56,7 +56,7 @@ static void model_device_get_property( GObject *object, guint prop_id, GValue *v
    }
 }
 
-static GParamSpec *device_properties[N_PROPERTIES] = {NULL, };
+static GParamSpec *device_properties[N_MODEL_DEVICE_PROPERTIES] = {NULL, };
 
 static void model_device_class_init( ModelDeviceClass *klass )
 {
@@ -77,7 +77,7 @@ static void model_device_class_init( ModelDeviceClass *klass )
                                                              "Device's Name",
                                                              NULL,
                                                              G_PARAM_READWRITE );
-   g_object_class_install_properties( gobject_class, N_PROPERTIES, device_properties);
+   g_object_class_install_properties( gobject_class, N_MODEL_DEVICE_PROPERTIES, device_properties);
 }
 
 /////////////////// INSTANCE //////////////////////////////
