@@ -8,12 +8,12 @@
 
 gboolean transform_toggle_label_on_off(GBinding *src, const GValue *fromValue,  __attribute__((unused)) GValue *toValue,
                                        __attribute__((unused)) gpointer user_data) {
-   // GtkToggleButton *tbutton = (GtkToggleButton *) g_binding_get_source(src);
-   GtkToggleButton *tbutton = (GtkToggleButton *) g_binding_dup_source(src);
+    GtkToggleButton *tbutton = (GtkToggleButton *) g_binding_get_source(src);
+//   GtkToggleButton *tbutton = (GtkToggleButton *) g_binding_dup_source(src);
    if (tbutton != NULL) {
       gboolean active = g_value_get_boolean(fromValue);
       gtk_button_set_label(GTK_BUTTON(tbutton), active ? "ON" : "OFF");
-     g_object_unref(tbutton);
+//     g_object_unref(tbutton);
       return TRUE;
    }
    return FALSE;
@@ -73,10 +73,13 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_custom_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "custom_anchor"));
    appWidgetsT->w_scalar_display_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "scalar_display_anchor"));
 
+   appWidgetsT->w_batt_indicator_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "batt_indicator_anchor"));
+
    // This is a placeholder, intending to have one instance
    appWidgetsT->w_the_dial = NULL;
    appWidgetsT->w_dial_listener_label = NULL;
    appWidgetsT->w_the_scalar_display = NULL;
+   appWidgetsT->w_the_batt_indicator = NULL;
 
    // ********************************************************************************
    /*

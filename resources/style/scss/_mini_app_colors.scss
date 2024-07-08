@@ -8,7 +8,7 @@ $base-border-color: rgb(46, 52, 54); // #2e3436
 
 
 $scalar-display-name: rgb(80, 50, 225);
-$scalar-display-dark: darken($scalar-display-name, 50%);
+$scalar-display-dark: darken($scalar-display-name, 20%);
 $scalar-display-bg: rgba(30, 90, 220, 0.1);
 $scalar-display-value: lighten($scalar-display-name, 25%);
 $scalar-display-units: $scalar-display-value;

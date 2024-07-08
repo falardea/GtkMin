@@ -46,6 +46,9 @@ typedef struct {
    GtkWidget   *w_dial_listener_label;
 
    GtkWidget   *w_the_scalar_display;
+
+   GtkWidget   *w_batt_indicator_anchor;
+   GtkWidget   *w_the_batt_indicator;
    /*
     GtkWidget   *w_
     */

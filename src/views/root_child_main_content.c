@@ -9,6 +9,7 @@
 #include "utils/logging.h"
 #include "views/root_child_msgout.h"
 #include "models/numeric_label.h"
+#include "models/battery_indicator.h"
 
 const double DIAL_INIT_VALUE = 0.0;
 
@@ -65,6 +66,12 @@ void on_dial_change(__attribute__((unused)) GtkWidget *wdgt, double value, gpoin
    // scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), value);
 }
 
+
+void on_batt_clicked(__attribute__((unused)) GtkWidget *wdgt, gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
+}
 void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
    GtkAdjustment  *adjustment;
@@ -75,12 +82,14 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
    if (wdgts->w_the_dial != NULL) gtk_widget_destroy(wdgts->w_the_dial);
    if (wdgts->w_the_scalar_display != NULL) gtk_widget_destroy(wdgts->w_the_scalar_display);
    if (wdgts->w_dial_listener_label != NULL) gtk_widget_destroy(wdgts->w_dial_listener_label);
+   if (wdgts->w_the_batt_indicator != NULL) gtk_widget_destroy(wdgts->w_the_batt_indicator);
 
    adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (DIAL_INIT_VALUE, 0, 100, 0.01, 0.1, 0));
 
    wdgts->w_the_dial = gtk_dial_new (adjustment);
    wdgts->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, "%1.1f");
    wdgts->w_the_scalar_display = scalar_display_new("pressure", "psi", "%1.1f", 0.0, 100.0);
+   wdgts->w_the_batt_indicator = battery_indicator_new();
 
    // Should this be part of the "new"
    scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), DIAL_INIT_VALUE);
@@ -89,8 +98,12 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
    gtk_box_pack_end(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_dial_listener_label, FALSE, TRUE, 0);
    gtk_box_pack_end(GTK_BOX(wdgts->w_scalar_display_anchor), wdgts->w_the_scalar_display, TRUE, TRUE, 10);
 
+   gtk_box_pack_start(GTK_BOX(wdgts->w_batt_indicator_anchor), wdgts->w_the_batt_indicator, TRUE, TRUE, 10);
+
    g_object_bind_property(wdgts->w_the_dial, "old_value", wdgts->w_dial_listener_label, "value", G_BINDING_DEFAULT);
    g_object_bind_property(wdgts->w_dial_listener_label, "value", wdgts->w_the_scalar_display, "value", G_BINDING_DEFAULT);
+
+   g_object_bind_property(wdgts->w_dial_listener_label, "value", wdgts->w_the_batt_indicator, "value", G_BINDING_DEFAULT);
 
    // g_object_bind_property_full(wdgts->w_the_dial, "adjustment",
    //                             wdgts->w_the_scalar_display, "label",
@@ -98,12 +111,20 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
    //                             (GBindingTransformFunc) transform_from_gvalue_to_,
    //                             NULL,NULL, NULL);
 
+
+
    gtk_widget_show(wdgts->w_dial_listener_label);
    gtk_widget_show(wdgts->w_the_dial);
    gtk_widget_show(wdgts->w_the_scalar_display);
+   gtk_widget_show(wdgts->w_the_batt_indicator);
 
    g_signal_connect (G_OBJECT(wdgts->w_the_dial),
                      "dial-changed",
                      G_CALLBACK(on_dial_change),
+                     wdgts);
+
+   g_signal_connect (G_OBJECT(wdgts->w_the_batt_indicator),
+                     "button-press-event",
+                     G_CALLBACK(on_batt_clicked),
                      wdgts);
 }
