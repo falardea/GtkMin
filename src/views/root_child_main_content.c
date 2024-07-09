@@ -88,7 +88,7 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
 
    wdgts->w_the_dial = gtk_dial_new (adjustment);
    wdgts->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, "%1.1f");
-   wdgts->w_the_scalar_display = scalar_display_new("pressure", "psi", "%1.1f", 0.0, 100.0);
+   wdgts->w_the_scalar_display = scalar_display_new("Battery", "% charge", "%1.1f", 0.0, 100.0);
    wdgts->w_the_batt_indicator = battery_indicator_new();
 
    // Should this be part of the "new"

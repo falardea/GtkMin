@@ -24,7 +24,7 @@ typedef struct _ScalarDisplayClass     ScalarDisplayClass;
 struct _ScalarDisplay
 {
    GtkBox         parent;
-   GtkBox         *gbox;  // parent-GObject?
+   // GtkBox         *gbox;  // parent-GObject?
    GtkLabel       *name_label;
    GtkLabel       *value_label;
    GtkLabel       *units_label;

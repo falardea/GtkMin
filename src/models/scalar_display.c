@@ -124,7 +124,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
    // parent_class = g_type_class_ref(gtk_widget_get_type());
 
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/mini_app/resources/scalar_display_template.glade");
-   gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, gbox);
+   // gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, gbox);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, name_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, value_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, units_label);
