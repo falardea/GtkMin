@@ -129,6 +129,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, value_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, units_label);
 
+   // TODO: gtk_widget_dispose_template?
    // gobject_class->dispose = scalar_display_dispose;
    gobject_class->finalize = scalar_display_finalize;
 
@@ -149,6 +150,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
                                                                                   NULL, G_PARAM_READWRITE );
 
    g_object_class_install_properties( gobject_class, N_SCALAR_DISPLAY_PROPERTIES, scalar_display_properties);
+   // OR signal_new_class_handler?
    scalar_display_signals[SCALAR_DISPLAY_CLICKED_SIGNAL] = g_signal_new("scalar-clicked",
                                                                         G_TYPE_FROM_CLASS(klass),
                                                                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
