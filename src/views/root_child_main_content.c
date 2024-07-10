@@ -10,6 +10,7 @@
 #include "views/root_child_msgout.h"
 #include "models/numeric_label.h"
 #include "models/battery_indicator.h"
+#include "models/two_button_popup_overlay.h"
 
 const double DIAL_INIT_VALUE = 0.0;
 
@@ -50,6 +51,13 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
          shown = FALSE;
       }
    }
+
+   wdgts->w_two_button_popup_root = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+   GtkWidget *popup = two_button_popup_new(wdgts->w_two_button_popup_root);
+   gtk_box_pack_start (GTK_BOX(wdgts->w_two_button_popup_root), popup, TRUE, TRUE, 0);
+
+   gtk_overlay_add_overlay(GTK_OVERLAY(wdgts->w_home_page_overlay), wdgts->w_two_button_popup_root);
+   gtk_widget_show_all(wdgts->w_two_button_popup_root);
 }
 
 

@@ -33,5 +33,23 @@ void build_and_show_two_button_prompt(app_widget_ref_struct *app_wdgts,
 
 void temp_popup_launcher(app_widget_ref_struct *wdgts);
 
+
+//// New Two Button
+
+#define TWO_BUTTON_TYPE_POPUP             ( two_button_popup_get_type () )
+G_DECLARE_FINAL_TYPE(TwoButtonPopup, two_button_popup, two_button, popup, GtkBox )
+struct _TwoButtonPopup
+{
+   GtkBox         parent;
+   GtkLabel       *title_label;
+   GtkLabel       *message_label;
+   GtkButton      *btn_accept;
+   GtkButton      *btn_reject;
+   void           (* on_btn_accept_clicked) (GtkButton *button, app_widget_ref_struct *app_wdgts);
+   void           (* on_btn_reject_clicked) (GtkButton *button, app_widget_ref_struct *app_wdgts);
+};
+GtkWidget*        two_button_popup_new       (GtkWidget *destination);
+GType             two_button_popup_get_type  ();
+
 G_END_DECLS
 #endif  // TWO_BUTTON_POPUP_OVERLAY_H__

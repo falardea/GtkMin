@@ -75,6 +75,9 @@ app_widget_ref_struct *app_builder(void) {
 
    appWidgetsT->w_batt_indicator_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "batt_indicator_anchor"));
 
+   appWidgetsT->w_home_page_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "home_page_overlay"));
+   appWidgetsT->w_two_button_popup_root = GTK_WIDGET(gtk_builder_get_object(builder, "two_button_popup_root"));
+
    // This is a placeholder, intending to have one instance
    appWidgetsT->w_the_dial = NULL;
    appWidgetsT->w_dial_listener_label = NULL;

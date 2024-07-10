@@ -49,6 +49,9 @@ typedef struct {
 
    GtkWidget   *w_batt_indicator_anchor;
    GtkWidget   *w_the_batt_indicator;
+
+   GtkWidget   *w_home_page_overlay;
+   GtkWidget   *w_two_button_popup_root;
    /*
     GtkWidget   *w_
     */

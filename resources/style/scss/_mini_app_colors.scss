@@ -11,3 +11,30 @@ $scalar-display-name: rgb(31, 60, 201);
 $scalar-display-dark: darken($scalar-display-name, 40%);
 $scalar-display-light: lighten($scalar-display-name, 65%);
 $scalar-display-units: $scalar-display-light;
+
+// Theme diverging here
+$pod-ux-darkest-blue: #103480;
+$pod-ux-darker-blue: #1847A7;
+$pod-ux-dark-blue: #1A4EBA;
+$pod-ux-base-blue: #3461BD;
+$pod-ux-light-blue: #4178EA;
+$pod-ux-lighter-blue: #1189E0;
+$pod-ux-lightest-blue: #309DEC;
+$pod-ux-other-blue-dark: #A5C2FF;
+$pod-ux-other-blue-light: #DBE9FF;
+
+$pod-ux-alarm-dark: #E50316;
+$pod-ux-alarm-light: #FF7070;
+$pod-ux-alarm-lightest: #FFBDBD;
+$pod-ux-warning: #FFC38B;
+
+$pod-ux-dark-gray: #404040;
+
+// Constants for the base colors from GTK
+//$gtk_text_color: #2e3436;
+//$gtk_bg_color: #f6f5f4;
+$gtk_text_color: $pod-ux-dark-gray;
+$gtk_bg_color: $pod-ux-other-blue-light;
+$gtk_border_color: darken($gtk_bg_color, 18%);
+$insensitive_bg_color: mix($gtk_bg_color, white, 60%);
+

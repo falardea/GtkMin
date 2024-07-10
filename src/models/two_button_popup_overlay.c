@@ -5,6 +5,7 @@
 #include <gtk/gtk.h>
 #include "comm.h"
 #include "two_button_popup_overlay.h"
+#include "utils/logging.h"
 
 #define BLOCK_PLACEHOLDER_TEXT "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt"\
 " ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip"\
@@ -15,15 +16,9 @@ static UserPromptResponseCallback_T on_user_accept;
 static UserPromptResponseCallback_T on_user_reject;
 
 OVERLAY_POPUP_PROPERTIES_T popup_flavors[NUM_OVERLAY_POPUP_FLAVORS] = {
-      {
-            "Yes/No Title", "Do you wish to continue?", "YES", "NO"
-      },
-      {
-            "Start/Cancel Title", "We're ready to run", "Start", "Cancel"
-      },
-      {
-            "Confirm/Cancel Title", "Confirm or cancel to dismiss", "Confirm", "Cancel"
-      }
+      { "Yes/No Title", "Do you wish to continue?", "YES", "NO" },
+      { "Start/Cancel Title", "We're ready to run", "Start", "Cancel" },
+      { "Confirm/Cancel Title", "Confirm or cancel to dismiss", "Confirm", "Cancel" }
 };
 
 void on_popup_accept_btn_clicked(__attribute__((unused)) GtkButton *button, app_widget_ref_struct *app_wdgts)
@@ -116,4 +111,47 @@ void build_and_show_two_button_prompt(app_widget_ref_struct *app_wdgts,
    g_signal_connect(GTK_BUTTON(popup_reject_btn), "clicked", G_CALLBACK(on_popup_reject_btn_clicked), app_wdgts);
 
    gtk_widget_show_all(popup_box);
+}
+
+//// Updated Two Button
+
+GtkWidget *parent_widget;
+static GtkWidgetClass *parent_class = NULL;
+
+G_DEFINE_TYPE(TwoButtonPopup, two_button_popup, GTK_TYPE_BOX )
+
+void on_btn_accept_clicked(__attribute__((unused)) GtkButton *button, app_widget_ref_struct *app_wdgts)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   gtk_widget_destroy(parent_widget);
+}
+
+static void two_button_popup_class_init(TwoButtonPopupClass *klass)
+{
+   GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
+   GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
+
+   parent_class = g_type_class_ref(gtk_widget_get_type());
+
+   gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/mini_app/resources/two_button_popup.glade");
+   gtk_widget_class_bind_template_child(widget_class, TwoButtonPopup, title_label);
+   gtk_widget_class_bind_template_child(widget_class, TwoButtonPopup, message_label);
+   gtk_widget_class_bind_template_child(widget_class, TwoButtonPopup, btn_accept);
+   gtk_widget_class_bind_template_child(widget_class, TwoButtonPopup, btn_reject);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_accept_clicked", (GCallback)on_btn_accept_clicked);
+   gtk_widget_class_bind_template_callback_full(widget_class, "on_btn_reject_clicked", (GCallback)on_btn_accept_clicked);
+}
+
+static void two_button_popup_init(TwoButtonPopup *self)
+{
+   gtk_widget_init_template(GTK_WIDGET(self));
+}
+
+GtkWidget *two_button_popup_new(GtkWidget *destination)
+{
+   TwoButtonPopup *pop;
+   pop = g_object_new(TWO_BUTTON_TYPE_POPUP, NULL);
+   parent_widget = destination;
+
+   return GTK_WIDGET(pop);
 }
