@@ -2,6 +2,7 @@
  * Created by french on 6/19/24.
 */
 #include <gtk/gtk.h>
+#include <math.h>
 #include "comm.h"
 #include "models/tictactoe.h"
 #include "models/gtkdial.h"
@@ -96,11 +97,12 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
 
    wdgts->w_the_dial = gtk_dial_new (adjustment);
    wdgts->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, "%1.1f");
-   wdgts->w_the_scalar_display = scalar_display_new("Battery", "% charge", "%1.1f", 0.0, 100.0);
+   wdgts->w_the_scalar_display = scalar_display_new("Battery", "% charge", "%1.1f");
    wdgts->w_the_batt_indicator = battery_indicator_new();
 
    // Should this be part of the "new"
-   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), DIAL_INIT_VALUE);
+//   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), DIAL_INIT_VALUE);
+   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), NAN);
 
    gtk_box_pack_start(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_the_dial, TRUE, TRUE, 10);
    gtk_box_pack_end(GTK_BOX(wdgts->w_custom_anchor), wdgts->w_dial_listener_label, FALSE, TRUE, 0);

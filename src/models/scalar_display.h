@@ -24,7 +24,6 @@ typedef struct _ScalarDisplayClass     ScalarDisplayClass;
 struct _ScalarDisplay
 {
    GtkBox         parent;
-   // GtkBox         *gbox;  // parent-GObject?
    GtkLabel       *name_label;
    GtkLabel       *value_label;
    GtkLabel       *units_label;
@@ -34,8 +33,10 @@ struct _ScalarDisplay
    gchar          *format_str;
 
    gdouble        value;
-   gdouble        lo_limit;
-   gdouble        hi_limit;
+
+   gboolean       has_error;
+   gboolean       value_oor;
+   gboolean       uncalibrated;
 };
 
 struct _ScalarDisplayClass
@@ -45,30 +46,31 @@ struct _ScalarDisplayClass
    void (*scalar_display_clicked)(ScalarDisplay *scalar);  // When the user clicks/touches
 };
 
-GtkWidget*           scalar_display_new            (const char* scalar_name,
-                                                    const char* scalar_units,
-                                                    const char* format_str,
-                                                    gdouble lo_limit,
-                                                    gdouble hi_limit);
-GType                scalar_display_get_type       ();
+GtkWidget*           scalar_display_new               (const char* scalar_name,
+                                                       const char* scalar_units,
+                                                       const char* format_str);
+GType                scalar_display_get_type          ();
 
-gchar                *scalar_display_get_name_str   (ScalarDisplay *self);
-void                 scalar_display_set_name_str   (ScalarDisplay *self, const char* name);
+gchar                *scalar_display_get_name_str     (ScalarDisplay *self);
+void                 scalar_display_set_name_str      (ScalarDisplay *self, const char* name);
 
-gchar                *scalar_display_get_units_str   (ScalarDisplay *self);
-void                 scalar_display_set_units_str   (ScalarDisplay *self, const char* units);
+gchar                *scalar_display_get_units_str    (ScalarDisplay *self);
+void                 scalar_display_set_units_str     (ScalarDisplay *self, const char* units);
 
-gdouble              scalar_display_get_value      (ScalarDisplay *self);
-void                 scalar_display_set_value      (ScalarDisplay *self, gdouble new_value);
+gdouble              scalar_display_get_value         (ScalarDisplay *self);
+void                 scalar_display_set_value         (ScalarDisplay *self, gdouble new_value);
 
-gdouble              scalar_display_get_lo_limit   (ScalarDisplay *self);
-void                 scalar_display_set_lo_limit   (ScalarDisplay *self, gdouble new_lo_limit);
+const char*          scalar_display_get_format_str    (ScalarDisplay *self);
+void                 scalar_display_set_format_str    (ScalarDisplay *self, const char* disp_format);
 
-gdouble              scalar_display_get_hi_limit   (ScalarDisplay *self);
-void                 scalar_display_set_hi_limit   (ScalarDisplay *self, gdouble new_hi_limit);
+gboolean             scalar_display_get_uncalibrated  (ScalarDisplay *self);
+void                 scalar_display_set_uncalibrated  (ScalarDisplay *self, gboolean is_uncalibrated);
 
-const char*          scalar_display_get_format_str (ScalarDisplay *self);
-void                 scalar_display_set_format_str (ScalarDisplay *self, const char* disp_format);
+gboolean             scalar_display_get_has_error     (ScalarDisplay *self);
+void                 scalar_display_set_has_error     (ScalarDisplay *self, gboolean errored);
+
+gboolean             scalar_display_get_value_oor     (ScalarDisplay *self);
+void                 scalar_display_set_value_oor     (ScalarDisplay *self, gboolean is_oor);
 
 G_END_DECLS
 #endif  // GTKMIN_SCALAR_DISPLAY_H_
