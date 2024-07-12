@@ -67,16 +67,16 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
 
 
 
-void on_dial_change(__attribute__((unused)) GtkWidget *wdgt, double value, gpointer user_data)
+void on_dial_change(__attribute__((unused)) GtkWidget *wdgt, double value, __attribute__((unused)) gpointer user_data)
 {
-   app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
+//   app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: this only prints, the value (%f), since values on the dial are bound", __func__, value);
 
    // numeric_label_set_value(NUMERIC_LABEL(wdgts->w_dial_listener_label), value);
    // scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), value);
 }
 
-
-void on_batt_clicked(__attribute__((unused)) GtkWidget *wdgt, gpointer user_data)
+void on_component_clicked(__attribute__((unused)) GtkWidget *wdgt, __attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
@@ -133,8 +133,14 @@ void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *butt
                      G_CALLBACK(on_dial_change),
                      wdgts);
 
+   g_signal_connect (G_OBJECT(wdgts->w_the_scalar_display),
+                     "button-press-event",
+                     G_CALLBACK(on_component_clicked),
+                     wdgts);
+
    g_signal_connect (G_OBJECT(wdgts->w_the_batt_indicator),
                      "button-press-event",
-                     G_CALLBACK(on_batt_clicked),
+                     G_CALLBACK(on_component_clicked),
                      wdgts);
+
 }

@@ -11,10 +11,8 @@
 struct _BatteryIndicator
 {
    GtkWidget            parent;
-   // GtkWidget         *child_widget;
    gdouble              value;         // the percent charge
    gdouble              old_value;     // to determine change?
-   guint                event_button;  // the gdk event->button, not a widget
 };
 
 // It appears that anything that isn't defined as a property is effectively private instance data?
@@ -22,11 +20,6 @@ enum {
    PROP_0,
    BATTERY_INDICATOR_VALUE_PROP,
    N_BATTERY_INDICATOR_PROPERTIES
-};
-
-enum {
-   BATTERY_INDICATOR_CUSTOM_SIGNAL,
-   N_BATTERY_INDICATOR_SIGNALS
 };
 
 G_DEFINE_TYPE(BatteryIndicator, battery_indicator, GTK_TYPE_WIDGET)
@@ -38,9 +31,6 @@ static gboolean   battery_indicator_draw                    (GtkWidget *widget,
                                                              cairo_t *cr);
 static gboolean   battery_indicator_button_press            (GtkWidget *widget,
                                                              GdkEventButton *event);
-static gboolean   battery_indicator_button_release          (GtkWidget *widget,
-                                                             GdkEventButton *event);
-
 static void battery_indicator_set_property( GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
    BatteryIndicator *self = (BatteryIndicator *) object;
@@ -76,11 +66,8 @@ static void battery_indicator_class_init(BatteryIndicatorClass *klass)
    GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
    GtkWidgetClass *widget_class = (GtkWidgetClass *) klass;
-   // gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass), "/mini_app/resources/battery_indicator.glade");
-   // gtk_widget_class_bind_template_child(widget_class, BatteryIndicator, child_widget);
 
    widget_class->button_press_event = battery_indicator_button_press;
-   widget_class->button_release_event = battery_indicator_button_release;
    widget_class->realize = battery_indicator_realize;
    widget_class->draw = battery_indicator_draw;
    widget_class->size_allocate = battery_indicator_size_allocate;
@@ -98,7 +85,6 @@ static void battery_indicator_init(BatteryIndicator *batt)
 {
    batt->value = 0.0;
    batt->old_value = 0.0;
-   batt->event_button = 0;
 }
 
 GtkWidget *battery_indicator_new(void)
@@ -216,30 +202,7 @@ static gboolean battery_indicator_button_press(GtkWidget *widget, GdkEventButton
    g_return_val_if_fail(event != NULL, FALSE);
    batt = BATTERY_INDICATOR(widget);
 
-   if (!batt->event_button)
-   {
-      gtk_grab_add(widget);
-      batt->event_button = event->button;
-      gtk_widget_queue_draw(GTK_WIDGET(batt));
-   }
+   g_signal_emit_by_name(G_OBJECT(batt), "button-press-event");
    return FALSE;
 }
 
-static gboolean battery_indicator_button_release(GtkWidget *widget, GdkEventButton *event)
-{
-   BatteryIndicator *batt;
-
-   g_return_val_if_fail(widget != NULL, FALSE);
-   g_return_val_if_fail(BATTERY_IS_INDICATOR(widget), FALSE);
-   g_return_val_if_fail(event != NULL, FALSE);
-
-   batt = BATTERY_INDICATOR(widget);
-   if (batt->event_button == event->button)
-   {
-      gtk_grab_remove(widget);
-      batt->event_button = 0;
-      g_signal_emit_by_name(G_OBJECT(batt), "button-press-event");
-   }
-
-   return FALSE;
-}

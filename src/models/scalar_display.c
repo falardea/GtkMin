@@ -8,11 +8,6 @@
 #include "utils/logging.h"
 
 enum {
-   SCALAR_DISPLAY_CLICKED_SIGNAL,
-   N_SCALAR_DISPLAY_SIGNALS
-};
-
-enum {
    PROP_0, // reserved for GObject
    SCALAR_DISPLAY_PROP_NAME_STR,
    SCALAR_DISPLAY_PROP_UNITS_STR,
@@ -24,34 +19,36 @@ enum {
    N_SCALAR_DISPLAY_PROPERTIES
 };
 
-//G_DEFINE_TYPE(ScalarDisplay, scalar_display, G_TYPE_OBJECT)
-static void scalar_display_class_init(ScalarDisplayClass *klass, gpointer class_data);
-static void scalar_display_init(ScalarDisplay *self, gpointer g_class);
+G_DEFINE_TYPE(ScalarDisplay, scalar_display, GTK_TYPE_BOX)
+//static void scalar_display_class_init(ScalarDisplayClass *klass, gpointer class_data);
+//static void scalar_display_init(ScalarDisplay *self, gpointer g_class);
+
+gboolean scalar_display_button_press(GtkWidget *widget, GdkEventButton *event);
 static void scalar_display_update_label_text(ScalarDisplay *self);
 
-GType scalar_display_get_type()
-{
-   static GType scalar_type = 0;
-   if (!scalar_type)
-   {
-      static const GTypeInfo scalar_info =
-            {
-                  sizeof (ScalarDisplayClass),
-                  NULL,
-                  NULL,
-                  (GClassInitFunc) scalar_display_class_init,
-                  NULL,
-                  NULL,
-                  sizeof(ScalarDisplay),
-                  0,
-                  (GInstanceInitFunc) scalar_display_init,
-                  NULL
-            };
-      // Note the parent type here and "parent/root" define in the instance and class structs
-      scalar_type = g_type_register_static(GTK_TYPE_BOX, "ScalarDisplay", &scalar_info, 0);
-   }
-   return scalar_type;
-}
+//GType scalar_display_get_type()
+//{
+//   static GType scalar_type = 0;
+//   if (!scalar_type)
+//   {
+//      static const GTypeInfo scalar_info =
+//            {
+//                  sizeof (ScalarDisplayClass),
+//                  NULL,
+//                  NULL,
+//                  (GClassInitFunc) scalar_display_class_init,
+//                  NULL,
+//                  NULL,
+//                  sizeof(ScalarDisplay),
+//                  0,
+//                  (GInstanceInitFunc) scalar_display_init,
+//                  NULL
+//            };
+//      // Note the parent type here and "parent/root" define in the instance and class structs
+//      scalar_type = g_type_register_static(GTK_TYPE_BOX, "ScalarDisplay", &scalar_info, 0);
+//   }
+//   return scalar_type;
+//}
 
 // static void scalar_display_dispose( GObject *self );
 static void scalar_display_finalize( GObject *self );
@@ -120,10 +117,9 @@ static void scalar_display_get_property(GObject *object, guint prop_id, GValue *
 }
 
 static GParamSpec *scalar_display_properties[N_SCALAR_DISPLAY_PROPERTIES] = {NULL, };
-static guint scalar_display_signals[N_SCALAR_DISPLAY_SIGNALS] = { 0 };
 
 // static GtkWidgetClass *parent_class = NULL;
-static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((unused))  gpointer class_data)
+static void scalar_display_class_init(ScalarDisplayClass *klass)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
@@ -136,9 +132,11 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, name_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, value_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, units_label);
+//   gtk_widget_class_bind_template_callback(widget_class, scalar_display_button_press);
+   gtk_widget_class_bind_template_callback_full(widget_class, "scalar_display_button_press", (GCallback)scalar_display_button_press);
 
-   // TODO: gtk_widget_dispose_template?
-   // gobject_class->dispose = scalar_display_dispose;
+   //   widget_class->button_press_event = scalar_display_button_press;
+
    gobject_class->finalize = scalar_display_finalize;
 
    gobject_class->get_property = scalar_display_get_property;
@@ -154,19 +152,10 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
    scalar_display_properties[SCALAR_DISPLAY_PROP_UNCALIBRATED] = g_param_spec_boolean("uncalibrated", NULL, NULL, TRUE, G_PARAM_READWRITE );
 
    g_object_class_install_properties( gobject_class, N_SCALAR_DISPLAY_PROPERTIES, scalar_display_properties);
-   // OR signal_new_class_handler?
-   scalar_display_signals[SCALAR_DISPLAY_CLICKED_SIGNAL] = g_signal_new("scalar-clicked",
-                                                                        G_TYPE_FROM_CLASS(klass),
-                                                                        G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-                                                                        G_STRUCT_OFFSET (ScalarDisplayClass , scalar_display_clicked),
-                                                                        NULL,
-                                                                        NULL,
-                                                                        g_cclosure_marshal_VOID__VOID,
-                                                                        G_TYPE_NONE, 0);
 }
 
 /////////////////// INSTANCE //////////////////////////////
-static void scalar_display_init(ScalarDisplay *self,__attribute__((unused))  gpointer g_class)
+static void scalar_display_init(ScalarDisplay *self)
 {
    gtk_widget_init_template(GTK_WIDGET(self));
    scalar_display_set_name_str(self, "UNNAMED");
@@ -371,3 +360,17 @@ static void scalar_display_update_label_text(ScalarDisplay *self)
    }
    gtk_label_set_markup(GTK_LABEL(self->value_label), label_str);
 }
+
+gboolean scalar_display_button_press(GtkWidget *widget, GdkEventButton *event)
+{
+   ScalarDisplay *scalar;
+   g_return_val_if_fail(widget != NULL, FALSE);
+   g_return_val_if_fail(SCALAR_IS_DISPLAY(widget), FALSE);
+   g_return_val_if_fail(event != NULL, FALSE);
+   scalar = SCALAR_DISPLAY(widget);
+
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   g_signal_emit_by_name(G_OBJECT(scalar), "button-press-event");
+   return FALSE;
+}
+

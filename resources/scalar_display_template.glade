@@ -10,6 +10,7 @@
     <property name="orientation">vertical</property>
     <property name="spacing">2</property>
     <property name="baseline_position">top</property>
+    <signal name="button-press-event" handler="scalar_display_button_press" swapped="no"/>
     <child>
       <object class="GtkBox" id="name_box">
         <property name="name">name-box</property>
