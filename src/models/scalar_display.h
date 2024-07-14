@@ -38,7 +38,7 @@ struct _ScalarDisplay
    gboolean       has_error;
    gboolean       value_oor;
    gboolean       uncalibrated;
-   void           (* scalar_display_button_press) (GtkButton *button, app_widget_ref_struct *app_wdgts);
+   // void           (* scalar_display_button_press) (GtkButton *button, app_widget_ref_struct *app_wdgts);
 };
 
 //struct _ScalarDisplayClass
