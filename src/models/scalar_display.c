@@ -28,7 +28,7 @@ enum {
 static void scalar_display_class_init(ScalarDisplayClass *klass, gpointer class_data);
 static void scalar_display_init(ScalarDisplay *self, gpointer g_class);
 
-gboolean scalar_display_button_press(GtkWidget *widget, GdkEventButton *event);
+//gboolean scalar_display_button_press(GtkWidget *widget, GdkEventButton *event, gpointer user_data);
 static void scalar_display_update_label_text(ScalarDisplay *self);
 
 GType scalar_display_get_type()
@@ -126,6 +126,12 @@ static guint gtk_dial_signals[N_SCALAR_DISPLAY_SIGNALS] = { 0 };
 static GParamSpec *scalar_display_properties[N_SCALAR_DISPLAY_PROPERTIES] = {NULL, };
 
 // static GtkWidgetClass *parent_class = NULL;
+
+gboolean scalar_press_event(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   return TRUE;
+}
 static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((unused)) gpointer class_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
@@ -141,8 +147,8 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, units_label);
 //   gtk_widget_class_bind_template_callback(widget_class, scalar_display_button_press);
 
-   widget_class->button_press_event = scalar_display_button_press;
-//   gtk_widget_class_bind_template_callback_full(widget_class, "scalar_display_button_press", (GCallback)scalar_display_button_press);
+//   widget_class->button_press_event = scalar_display_button_press;
+   gtk_widget_class_bind_template_callback_full(widget_class, "btn_press_event", (GCallback)scalar_press_event);
 
    // gtk_widget_class_bind_template_callback_full(widget_class, "scalar_display_button_press", (GCallback)scalar_display_button_press);
 
@@ -177,7 +183,10 @@ static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((u
 /////////////////// INSTANCE //////////////////////////////
 static void scalar_display_init(ScalarDisplay *self,__attribute__((unused)) gpointer g_class)
 {
+   gtk_widget_add_events(GTK_WIDGET(self), GDK_BUTTON_PRESS_MASK);
+
    gtk_widget_init_template(GTK_WIDGET(self));
+
    scalar_display_set_name_str(self, "UNNAMED");
    scalar_display_set_units_str(self, "UOM");
    scalar_display_set_format_str(self, "%f");
@@ -380,18 +389,4 @@ static void scalar_display_update_label_text(ScalarDisplay *self)
    gtk_label_set_markup(GTK_LABEL(self->value_label), label_str);
 }
 
-gboolean scalar_display_button_press(GtkWidget *widget, GdkEventButton *event)
-{
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
-   ScalarDisplay *scalar;
-   g_return_val_if_fail(widget != NULL, FALSE);
-   g_return_val_if_fail(SCALAR_IS_DISPLAY(widget), FALSE);
-   g_return_val_if_fail(event != NULL, FALSE);
-   scalar = SCALAR_DISPLAY(widget);
-
-
-   g_signal_emit_by_name(G_OBJECT(scalar), "button-press-event");
-   return FALSE;
-}
 

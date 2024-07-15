@@ -52,6 +52,9 @@ typedef struct {
 
    GtkWidget   *w_home_page_overlay;
    GtkWidget   *w_two_button_popup_root;
+
+   GtkWidget   *w_temp_widget_anchor;
+   GtkWidget   *w_temp_composite;
    /*
     GtkWidget   *w_
     */

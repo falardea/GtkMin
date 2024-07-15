@@ -45,8 +45,8 @@ struct _TwoButtonPopup
    GtkLabel       *message_label;
    GtkButton      *btn_accept;
    GtkButton      *btn_reject;
-   void           (* on_btn_accept_clicked) (GtkButton *button, app_widget_ref_struct *app_wdgts);
-   void           (* on_btn_reject_clicked) (GtkButton *button, app_widget_ref_struct *app_wdgts);
+//   void           (* on_btn_accept_clicked) (GtkButton *button, app_widget_ref_struct *app_wdgts);
+//   void           (* on_btn_reject_clicked) (GtkButton *button, app_widget_ref_struct *app_wdgts);
 };
 GtkWidget*        two_button_popup_new       (GtkWidget *destination);
 GType             two_button_popup_get_type  ();

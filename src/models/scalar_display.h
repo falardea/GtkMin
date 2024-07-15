@@ -44,7 +44,7 @@ struct _ScalarDisplay
 struct _ScalarDisplayClass
 {
    GtkBoxClass    parent_class;
-   gboolean           (* scalar_display_button_press) (GtkWidget *widget, GdkEventButton *event);
+//   gboolean           (* scalar_display_button_press) (GtkWidget *widget, GdkEventButton *event);
 
 };
 

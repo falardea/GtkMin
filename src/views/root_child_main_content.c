@@ -6,6 +6,9 @@
 #include "utils/logging.h"
 #include "views/root_child_msgout.h"
 #include "models/two_button_popup_overlay.h"
+#include "models/temp_composite.h"
+
+static const gchar *label_str = "FOOBITTY";
 
 void wipe_children(GtkWidget *wdgt, gpointer udata)
 {
@@ -31,7 +34,29 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
    gtk_widget_show_all(wdgts->w_two_button_popup_root);
 }
 
+
+void on_label_clicked(__attribute__((unused)) GtkWidget *wdgt, __attribute__((unused)) gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+}
+
 void on_do_something_else_button_clicked(__attribute__((unused)) GtkButton *button, gpointer user_data)
 {
+   app_widget_ref_struct *wdgts = (app_widget_ref_struct *) user_data;
    logging_llprintf(LOGLEVEL_DEBUG, "%s: CHECKPOINT", __func__);
+
+   if (wdgts->w_temp_composite != NULL)
+   {
+      gtk_widget_destroy(wdgts->w_temp_composite);
+      wdgts->w_temp_composite = NULL;
+   }
+   wdgts->w_temp_composite = temp_composite_new(label_str);
+   gtk_box_pack_end(GTK_BOX(wdgts->w_temp_widget_anchor), wdgts->w_temp_composite, FALSE, TRUE, 0);
+
+   gtk_widget_show(wdgts->w_temp_composite);
+
+   g_signal_connect (G_OBJECT(wdgts->w_the_scalar_display),
+                     "button-press-event",
+                     G_CALLBACK(on_label_clicked),
+                     wdgts);
 }

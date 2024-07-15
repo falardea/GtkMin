@@ -5,6 +5,7 @@
         <file preprocess="xml-stripblanks">resources/scalar_display_template.glade</file>
         <file preprocess="xml-stripblanks">resources/numeric_label.glade</file>
         <file preprocess="xml-stripblanks">resources/two_button_popup.glade</file>
+        <file preprocess="xml-stripblanks">resources/temp_composite.glade</file>
         <file>resources/style/mini_app_style.css</file>
     </gresource>
 </gresources>

@@ -93,6 +93,8 @@ set(MY_SOURCES
       src/models/battery_indicator.h
       src/models/two_button_popup_overlay.h
       src/models/two_button_popup_overlay.c
+      src/models/temp_composite.c
+      src/models/temp_composite.h
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

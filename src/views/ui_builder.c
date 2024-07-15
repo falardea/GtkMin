@@ -103,10 +103,13 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_home_page_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "home_page_overlay"));
    appWidgetsT->w_two_button_popup_root = GTK_WIDGET(gtk_builder_get_object(builder, "two_button_popup_root"));
 
+   appWidgetsT->w_temp_widget_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "temp_widget_anchor"));
 //   appWidgetsT->w_the_dial = NULL;
 //   appWidgetsT->w_dial_listener_label = NULL;
 //   appWidgetsT->w_the_scalar_display = NULL;
 //   appWidgetsT->w_the_batt_indicator = NULL;
+
+   appWidgetsT->w_temp_composite = NULL;
 
    GtkWidget      *ttt;
    GtkAdjustment  *adjustment;
