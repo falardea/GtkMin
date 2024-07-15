@@ -24,36 +24,36 @@ enum {
    N_SCALAR_DISPLAY_PROPERTIES
 };
 
-G_DEFINE_TYPE(ScalarDisplay, scalar_display, GTK_TYPE_BOX)
-//static void scalar_display_class_init(ScalarDisplayClass *klass, gpointer class_data);
-//static void scalar_display_init(ScalarDisplay *self, gpointer g_class);
+//G_DEFINE_TYPE(ScalarDisplay, scalar_display, GTK_TYPE_BOX)
+static void scalar_display_class_init(ScalarDisplayClass *klass, gpointer class_data);
+static void scalar_display_init(ScalarDisplay *self, gpointer g_class);
 
 gboolean scalar_display_button_press(GtkWidget *widget, GdkEventButton *event);
 static void scalar_display_update_label_text(ScalarDisplay *self);
 
-//GType scalar_display_get_type()
-//{
-//   static GType scalar_type = 0;
-//   if (!scalar_type)
-//   {
-//      static const GTypeInfo scalar_info =
-//            {
-//                  sizeof (ScalarDisplayClass),
-//                  NULL,
-//                  NULL,
-//                  (GClassInitFunc) scalar_display_class_init,
-//                  NULL,
-//                  NULL,
-//                  sizeof(ScalarDisplay),
-//                  0,
-//                  (GInstanceInitFunc) scalar_display_init,
-//                  NULL
-//            };
-//      // Note the parent type here and "parent/root" define in the instance and class structs
-//      scalar_type = g_type_register_static(GTK_TYPE_BOX, "ScalarDisplay", &scalar_info, 0);
-//   }
-//   return scalar_type;
-//}
+GType scalar_display_get_type()
+{
+   static GType scalar_type = 0;
+   if (!scalar_type)
+   {
+      static const GTypeInfo scalar_info =
+            {
+                  sizeof (ScalarDisplayClass),
+                  NULL,
+                  NULL,
+                  (GClassInitFunc) scalar_display_class_init,
+                  NULL,
+                  NULL,
+                  sizeof(ScalarDisplay),
+                  0,
+                  (GInstanceInitFunc) scalar_display_init,
+                  NULL
+            };
+      // Note the parent type here and "parent/root" define in the instance and class structs
+      scalar_type = g_type_register_static(GTK_TYPE_BOX, "ScalarDisplay", &scalar_info, 0);
+   }
+   return scalar_type;
+}
 
 // static void scalar_display_dispose( GObject *self );
 static void scalar_display_finalize( GObject *self );
@@ -121,11 +121,12 @@ static void scalar_display_get_property(GObject *object, guint prop_id, GValue *
    }
 }
 
+__attribute__((unused))
 static guint gtk_dial_signals[N_SCALAR_DISPLAY_SIGNALS] = { 0 };
 static GParamSpec *scalar_display_properties[N_SCALAR_DISPLAY_PROPERTIES] = {NULL, };
 
 // static GtkWidgetClass *parent_class = NULL;
-static void scalar_display_class_init(ScalarDisplayClass *klass)
+static void scalar_display_class_init(ScalarDisplayClass *klass,__attribute__((unused)) gpointer class_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
    GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
@@ -141,7 +142,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
 //   gtk_widget_class_bind_template_callback(widget_class, scalar_display_button_press);
 
    widget_class->button_press_event = scalar_display_button_press;
-   gtk_widget_class_bind_template_callback_full(widget_class, "scalar_display_button_press", (GCallback)scalar_display_button_press);
+//   gtk_widget_class_bind_template_callback_full(widget_class, "scalar_display_button_press", (GCallback)scalar_display_button_press);
 
    // gtk_widget_class_bind_template_callback_full(widget_class, "scalar_display_button_press", (GCallback)scalar_display_button_press);
 
@@ -174,7 +175,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
 }
 
 /////////////////// INSTANCE //////////////////////////////
-static void scalar_display_init(ScalarDisplay *self)
+static void scalar_display_init(ScalarDisplay *self,__attribute__((unused)) gpointer g_class)
 {
    gtk_widget_init_template(GTK_WIDGET(self));
    scalar_display_set_name_str(self, "UNNAMED");
@@ -209,7 +210,7 @@ GtkWidget* scalar_display_new(const char* scalar_name, const char* scalar_units,
       scalar_display_set_format_str(scalar, format_str);
    }
 
-   // g_signal_connect(scalar, "button-press-event", (G_CALLBACK) scalar_display_button_press, g_app_widget_refs);
+//   g_signal_connect(scalar, "button-press-event", G_CALLBACK(scalar_display_button_press), g_app_widget_refs);
    gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(scalar)), "scalar_display");
 
    return GTK_WIDGET(scalar);
@@ -381,13 +382,15 @@ static void scalar_display_update_label_text(ScalarDisplay *self)
 
 gboolean scalar_display_button_press(GtkWidget *widget, GdkEventButton *event)
 {
+   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    ScalarDisplay *scalar;
    g_return_val_if_fail(widget != NULL, FALSE);
    g_return_val_if_fail(SCALAR_IS_DISPLAY(widget), FALSE);
    g_return_val_if_fail(event != NULL, FALSE);
    scalar = SCALAR_DISPLAY(widget);
 
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+
    g_signal_emit_by_name(G_OBJECT(scalar), "button-press-event");
    return FALSE;
 }
