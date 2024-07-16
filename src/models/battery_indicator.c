@@ -37,7 +37,7 @@ static void battery_indicator_set_property( GObject *object, guint prop_id, cons
    switch (prop_id)
    {
       case BATTERY_INDICATOR_VALUE_PROP:
-         battery_indicator_set_value(object, g_value_get_double( value ));
+         battery_indicator_set_value(self, g_value_get_double( value ));
          break;
       default:
          G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
@@ -135,7 +135,7 @@ static void battery_indicator_realize(GtkWidget *widget)
 
 static void battery_indicator_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 {
-   BatteryIndicator *batt;
+//   BatteryIndicator *batt;
    g_return_if_fail(widget != NULL);
    g_return_if_fail(BATTERY_IS_INDICATOR(widget));
    g_return_if_fail(allocation != NULL);

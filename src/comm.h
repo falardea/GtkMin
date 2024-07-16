@@ -23,6 +23,14 @@ typedef enum {
    LOGLEVEL_ERROR
 } LOGLEVEL;
 
+typedef enum
+{
+   SCALAR_DISPLAY_ARTERIAL_OXYGEN,
+   SCALAR_DISPLAY_VENOUS_OXYGEN,
+   SCALAR_DISPLAY_ARTERIAL_PRESSURE,
+   N_SCALAR_DISPLAY_MEASUREMENT_TYPES
+} SCALAR_DISPLAY_MEASUREMENT_TYPES;
+
 extern const char* DEBUG_STR;
 extern const char* INFO_STR;
 extern const char* ERROR_STR;
@@ -41,7 +49,7 @@ typedef struct {
    GtkWidget   *w_custom_anchor;
    GtkWidget   *w_scalar_display_anchor;
 
-
+   GtkWidget   *w_ttt;
    GtkWidget   *w_the_dial;
    GtkWidget   *w_dial_listener_label;
 
@@ -51,7 +59,7 @@ typedef struct {
    GtkWidget   *w_the_batt_indicator;
 
    GtkWidget   *w_home_page_overlay;
-   GtkWidget   *w_two_button_popup_root;
+//   GtkWidget   *w_two_button_popup_root;
 
    GtkWidget   *w_temp_widget_anchor;
    GtkWidget   *w_temp_composite;

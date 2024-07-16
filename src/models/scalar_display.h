@@ -9,18 +9,18 @@
 
 G_BEGIN_DECLS // C++ guard, from gmacros.h
 
-// #define SCALAR_TYPE_DISPLAY              ( scalar_display_get_type( ) )
-// G_DECLARE_FINAL_TYPE(ScalarDisplay, scalar_display, SCALAR, DISPLAY, GtkBox)
+ #define SCALAR_TYPE_DISPLAY              ( scalar_display_get_type( ) )
+ G_DECLARE_FINAL_TYPE(ScalarDisplay, scalar_display, SCALAR, DISPLAY, GtkBox)
 
-#define SCALAR_TYPE_DISPLAY            ( scalar_display_get_type () )
-#define SCALAR_DISPLAY(obj)            ( G_TYPE_CHECK_INSTANCE_CAST ( (obj), scalar_display_get_type (), ScalarDisplay ))
-#define SCALAR_DISPLAY_CLASS(klass)    ( G_TYPE_CHECK_CLASS_CAST ( (klass) , scalar_display_get_type (), ScalarDisplayClass ))
-#define SCALAR_IS_DISPLAY(obj)         ( G_TYPE_CHECK_INSTANCE_TYPE ( (obj) , scalar_display_get_type () ))
-#define SCALAR_IS_DISPLAY_CLASS(klass) ( G_TYPE_CHECK_CLASS_TYPE ( (klass) , SCALAR_TYPE_DISPLAY ))
-#define SCALAR_DISPLAY_GET_CLASS(obj)  ( G_TYPE_INSTANCE_GET_CLASS ( (obj), SCALAR_TYPE_DISPLAY, ScalarDisplayClass ))
+//#define SCALAR_TYPE_DISPLAY            ( scalar_display_get_type () )
+//#define SCALAR_DISPLAY(obj)            ( G_TYPE_CHECK_INSTANCE_CAST ( (obj), scalar_display_get_type (), ScalarDisplay ))
+//#define SCALAR_DISPLAY_CLASS(klass)    ( G_TYPE_CHECK_CLASS_CAST ( (klass) , scalar_display_get_type (), ScalarDisplayClass ))
+//#define SCALAR_IS_DISPLAY(obj)         ( G_TYPE_CHECK_INSTANCE_TYPE ( (obj) , scalar_display_get_type () ))
+//#define SCALAR_IS_DISPLAY_CLASS(klass) ( G_TYPE_CHECK_CLASS_TYPE ( (klass) , SCALAR_TYPE_DISPLAY ))
+//#define SCALAR_DISPLAY_GET_CLASS(obj)  ( G_TYPE_INSTANCE_GET_CLASS ( (obj), SCALAR_TYPE_DISPLAY, ScalarDisplayClass ))
 
-typedef struct _ScalarDisplay          ScalarDisplay;
-typedef struct _ScalarDisplayClass     ScalarDisplayClass;
+//typedef struct _ScalarDisplay          ScalarDisplay;
+//typedef struct _ScalarDisplayClass     ScalarDisplayClass;
 
 struct _ScalarDisplay
 {
@@ -38,15 +38,13 @@ struct _ScalarDisplay
    gboolean       has_error;
    gboolean       value_oor;
    gboolean       uncalibrated;
-//    void           (* scalar_display_button_press) (GtkButton *button, app_widget_ref_struct *app_wdgts);
 };
 
-struct _ScalarDisplayClass
-{
-   GtkBoxClass    parent_class;
-//   gboolean           (* scalar_display_button_press) (GtkWidget *widget, GdkEventButton *event);
-
-};
+//struct _ScalarDisplayClass
+//{
+//   GtkBoxClass    parent_class;
+////   void           (* scalar_display_pressed) (ScalarDisplay *scalar, SCALAR_DISPLAY_MEASUREMENT_TYPES *src);
+//};
 
 GtkWidget*           scalar_display_new               (const char* scalar_name,
                                                        const char* scalar_units,

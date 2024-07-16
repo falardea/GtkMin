@@ -10,7 +10,6 @@ G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 #define BATTERY_TYPE_INDICATOR ( battery_indicator_get_type () )
 
-//G_DECLARE_DERIVABLE_TYPE(BatteryIndicator, battery_indicator, BATTERY, INDICATOR, GtkWidget)
 G_DECLARE_FINAL_TYPE(BatteryIndicator, battery_indicator, BATTERY, INDICATOR, GtkWidget)
 
 GtkWidget *battery_indicator_new(void);

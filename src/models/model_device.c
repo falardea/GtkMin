@@ -92,9 +92,8 @@ static void model_device_finalize( GObject *self )
 {
    ModelDevice *thisDevice = MODEL_DEVICE(self );
    g_free(thisDevice->device_name);
-   GObjectClass *parent_class = G_OBJECT_CLASS( model_device_parent_class );
    logging_llprintf(LOGLEVEL_DEBUG, "object instance finalize");
-   ( *parent_class->finalize )( self );
+   G_OBJECT_CLASS (model_device_parent_class)->finalize (self);
 }
 
 ModelDevice *model_device_new( const gchar *name )

@@ -55,29 +55,30 @@ void genericWidgetSetup(gpointer widget, __attribute__((unused)) gpointer user_d
    }
 }
 
-
-
 void win( GtkWidget *widget, __attribute__((unused)) gpointer data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "You win!");
    tictactoe_clear (TICTACTOE (widget));
 }
-//void on_dial_change(__attribute__((unused)) GtkWidget *wdgt, double value, __attribute__((unused)) gpointer user_data)
-//{
-//   logging_llprintf(LOGLEVEL_DEBUG, "value = %f", value);
-//}
 
 void on_component_clicked(__attribute__((unused)) GtkWidget *wdgt, __attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 }
 
+void on_scalar_clicked(__attribute__((unused)) GtkWidget *wdgt, int graph_type, __attribute__((unused)) gpointer user_data)
+{
+   logging_llprintf(LOGLEVEL_DEBUG, "%s: signal_source = %d", __func__, graph_type);
+}
+
 app_widget_ref_struct *app_builder(void) {
-   GtkBuilder *builder;
+   GtkBuilder              *builder;
+   GtkAdjustment           *adjustment;
 
-   app_widget_ref_struct *appWidgetsT = g_slice_new(app_widget_ref_struct);
+   app_widget_ref_struct   *appWidgetsT = g_slice_new(app_widget_ref_struct);
 
-   builder = gtk_builder_new();
+   builder     = gtk_builder_new();
+   adjustment  = GTK_ADJUSTMENT (gtk_adjustment_new (DIAL_INIT_VALUE, 0, 100, 0.01, 0.1, 0));
 
    if (gtk_builder_add_from_resource(builder, "/mini_app/resources/mini_app.glade", NULL) == 0) {
       logging_llprintf(LOGLEVEL_ERROR, "failed to load glade resource %s", "mini_app.glade");
@@ -101,74 +102,50 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_batt_indicator_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "batt_indicator_anchor"));
 
    appWidgetsT->w_home_page_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "home_page_overlay"));
-   appWidgetsT->w_two_button_popup_root = GTK_WIDGET(gtk_builder_get_object(builder, "two_button_popup_root"));
 
    appWidgetsT->w_temp_widget_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "temp_widget_anchor"));
-//   appWidgetsT->w_the_dial = NULL;
-//   appWidgetsT->w_dial_listener_label = NULL;
-//   appWidgetsT->w_the_scalar_display = NULL;
-//   appWidgetsT->w_the_batt_indicator = NULL;
 
-   appWidgetsT->w_temp_composite = NULL;
-
-   GtkWidget      *ttt;
-   GtkAdjustment  *adjustment;
-   adjustment = GTK_ADJUSTMENT (gtk_adjustment_new (DIAL_INIT_VALUE, 0, 100, 0.01, 0.1, 0));
+   appWidgetsT->w_ttt = tictactoe_new();
    appWidgetsT->w_the_dial = gtk_dial_new (adjustment);
    appWidgetsT->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, "%1.1f");
    appWidgetsT->w_the_scalar_display = scalar_display_new("Battery", "% charge", "%1.1f");
    appWidgetsT->w_the_batt_indicator = battery_indicator_new();
 
-   // Should this be part of the "new"
-//   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_scalar_display), DIAL_INIT_VALUE);
-   scalar_display_set_value(SCALAR_DISPLAY(appWidgetsT->w_the_scalar_display), NAN);
-
+   gtk_container_add(GTK_CONTAINER(appWidgetsT->w_composite_anchor), appWidgetsT->w_ttt);
    gtk_box_pack_start(GTK_BOX(appWidgetsT->w_custom_anchor), appWidgetsT->w_the_dial, TRUE, TRUE, 10);
    gtk_box_pack_end(GTK_BOX(appWidgetsT->w_custom_anchor), appWidgetsT->w_dial_listener_label, FALSE, TRUE, 0);
    gtk_box_pack_end(GTK_BOX(appWidgetsT->w_scalar_display_anchor), appWidgetsT->w_the_scalar_display, TRUE, TRUE, 10);
-
    gtk_box_pack_start(GTK_BOX(appWidgetsT->w_batt_indicator_anchor), appWidgetsT->w_the_batt_indicator, TRUE, TRUE, 10);
 
    g_object_bind_property(appWidgetsT->w_the_dial, "old_value", appWidgetsT->w_dial_listener_label, "value", G_BINDING_DEFAULT);
    g_object_bind_property(appWidgetsT->w_dial_listener_label, "value", appWidgetsT->w_the_scalar_display, "value", G_BINDING_DEFAULT);
-
    g_object_bind_property(appWidgetsT->w_dial_listener_label, "value", appWidgetsT->w_the_batt_indicator, "value", G_BINDING_DEFAULT);
-   // This is a placeholder, intending to have one instance
 
-   ttt = tictactoe_new();
-   gtk_container_add(GTK_CONTAINER(appWidgetsT->w_composite_anchor), ttt);
-   gtk_widget_show(ttt);
-   g_signal_connect (G_OBJECT(ttt), "tictactoe", G_CALLBACK(win), NULL);
-
-   // ********************************************************************************
-   /*
-    appWidgetsT->w_glade_ID = GTK_WIDGET(gtk_builder_get_object(builder, "glade_ID"));
-    */
+   appWidgetsT->w_temp_composite = NULL;
 
    // ********************************************************************************
    // signals and bindings
    // ********************************************************************************
    gtk_builder_connect_signals(builder, appWidgetsT);
 
-//   g_signal_connect (G_OBJECT(appWidgetsT->w_the_dial),
-//                     "dial-changed",
-//                     G_CALLBACK(on_dial_change),
-//                     appWidgetsT);
+   g_signal_connect (G_OBJECT(appWidgetsT->w_ttt), "tictactoe", G_CALLBACK(win), NULL);
 
-   g_signal_connect (G_OBJECT(appWidgetsT->w_the_scalar_display),
-                     "button-press-event",
-                     G_CALLBACK(on_component_clicked),
-                     appWidgetsT);
+   g_signal_connect (G_OBJECT(appWidgetsT->w_the_scalar_display), "scalar-display-pressed",
+                     G_CALLBACK(on_scalar_clicked), appWidgetsT);
 
-   g_signal_connect (G_OBJECT(appWidgetsT->w_the_batt_indicator),
-                     "button-press-event",
-                     G_CALLBACK(on_component_clicked),
-                     appWidgetsT);
+   g_signal_connect (G_OBJECT(appWidgetsT->w_the_scalar_display), "button-press-event",
+                     G_CALLBACK(on_component_clicked), appWidgetsT);
+
+   g_signal_connect (G_OBJECT(appWidgetsT->w_the_batt_indicator), "button-press-event",
+                     G_CALLBACK(on_component_clicked), appWidgetsT);
 
    gtk_widget_show(appWidgetsT->w_dial_listener_label);
    gtk_widget_show(appWidgetsT->w_the_dial);
    gtk_widget_show(appWidgetsT->w_the_scalar_display);
    gtk_widget_show(appWidgetsT->w_the_batt_indicator);
+   gtk_widget_show(appWidgetsT->w_ttt);
+
+   scalar_display_set_value(SCALAR_DISPLAY(appWidgetsT->w_the_scalar_display), DIAL_INIT_VALUE);
 
    // Call the generic widget setup function on all the widgets
    // This lets us easily set up signal handlers for certain classes of widget (e.g. block scrolling, show number pad)

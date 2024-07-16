@@ -123,6 +123,7 @@ static void numeric_label_finalize( GObject *object )
    NumericLabel *label = NUMERIC_LABEL(object);
    if(label->format_str != NULL) g_free(label->format_str);
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
+   G_OBJECT_CLASS(numeric_label_parent_class)->finalize (object);
 }
 
 gdouble numeric_label_get_value(NumericLabel *self)

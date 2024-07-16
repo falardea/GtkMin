@@ -25,7 +25,6 @@ enum {
 G_DEFINE_TYPE(TempComposite, temp_composite, GTK_TYPE_BOX)
 
 static void temp_composite_finalize          ( GObject *object );
-//static void temp_composite_realize           (GtkWidget *widget);
 
 static void temp_composite_set_property( GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
@@ -54,17 +53,13 @@ static void temp_composite_get_property( GObject *object, guint prop_id, GValue 
 
 static GParamSpec *temp_composite_properties[N_TEMP_COMPOSITE_PROPERTIES] = {NULL, };
 
-
-
-
-gboolean btn_press_event(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+gboolean btn_press_event(__attribute__((unused))GtkWidget *widget,__attribute__((unused)) GdkEventButton *event,__attribute__((unused)) gpointer user_data)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
 
    return FALSE;
 }
 
-//static GtkWidgetClass *parent_class = NULL;
 static void temp_composite_class_init(TempCompositeClass *klass)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
@@ -98,9 +93,9 @@ static void temp_composite_finalize(GObject *self)
 {
    TempComposite *comp = TEMP_COMPOSITE(self);
    g_free(comp->name);
-   GObjectClass *parent_class = G_OBJECT_CLASS( temp_composite_parent_class );
+
    logging_llprintf(LOGLEVEL_DEBUG, "object instance finalize");
-   ( *parent_class->finalize )( self );
+   G_OBJECT_CLASS (temp_composite_parent_class)->finalize (self);
 }
 
 GtkWidget *temp_composite_new(const gchar *new_name)
