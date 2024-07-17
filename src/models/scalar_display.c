@@ -24,9 +24,45 @@ enum {
    N_SCALAR_DISPLAY_PROPERTIES
 };
 
+struct _ScalarDisplay
+{
+   GtkBox         parent;
+   GtkLabel       *name_label;
+   GtkLabel       *value_label;
+   GtkLabel       *units_label;
+
+   gchar          *name_str;
+   gchar          *units_str;
+   gchar          *format_str;
+
+   gdouble        value;
+
+   gboolean       has_error;
+   gboolean       value_oor;
+   gboolean       uncalibrated;
+};
+
+static guint scalar_display_signals[N_SCALAR_DISPLAY_SIGNALS] = { 0 };
+
+static GParamSpec *scalar_display_properties[N_SCALAR_DISPLAY_PROPERTIES] = {NULL, };
+
 G_DEFINE_TYPE(ScalarDisplay, scalar_display, GTK_TYPE_BOX)
 
+// This is the function signature for callback listening for a SCALAR_DISPLAY_PRESSED_SIGNAL
 void (* scalar_display_pressed) (ScalarDisplay *scalar, SCALAR_DISPLAY_MEASUREMENT_TYPES *src);
+
+gboolean scalar_display_template_click_handler(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+{
+   g_return_val_if_fail(widget != NULL, FALSE);
+
+   if (event->type == GDK_BUTTON_PRESS)
+   {
+      ScalarDisplay *scalar = SCALAR_DISPLAY(user_data);
+      g_signal_emit(G_OBJECT(scalar), scalar_display_signals[SCALAR_DISPLAY_PRESSED_SIGNAL], 0, SCALAR_DISPLAY_ARTERIAL_PRESSURE);
+      return TRUE;
+   }
+   return FALSE;
+}
 
 static void scalar_display_update_label_text(ScalarDisplay *self);
 
@@ -95,23 +131,6 @@ static void scalar_display_get_property(GObject *object, guint prop_id, GValue *
    }
 }
 
-static guint scalar_display_signals[N_SCALAR_DISPLAY_SIGNALS] = { 0 };
-
-static GParamSpec *scalar_display_properties[N_SCALAR_DISPLAY_PROPERTIES] = {NULL, };
-
-gboolean scalar_press_event(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
-{
-   g_return_val_if_fail(widget != NULL, FALSE);
-
-   if (event->type == GDK_BUTTON_PRESS)
-   {
-      ScalarDisplay *scalar = SCALAR_DISPLAY(user_data);
-      g_signal_emit(G_OBJECT(scalar), scalar_display_signals[SCALAR_DISPLAY_PRESSED_SIGNAL], 0, SCALAR_DISPLAY_ARTERIAL_PRESSURE);
-      return TRUE;
-   }
-   return FALSE;
-}
-
 static void scalar_display_class_init(ScalarDisplayClass *klass)
 {
    logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
@@ -122,7 +141,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, name_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, value_label);
    gtk_widget_class_bind_template_child(widget_class, ScalarDisplay, units_label);
-   gtk_widget_class_bind_template_callback_full(widget_class, "btn_press_event", (GCallback)scalar_press_event);
+   gtk_widget_class_bind_template_callback_full(widget_class, "btn_press_event", (GCallback)scalar_display_template_click_handler);
 
     scalar_display_signals[SCALAR_DISPLAY_PRESSED_SIGNAL] = g_signal_new_class_handler("scalar-display-pressed",
                                                                                        G_TYPE_FROM_CLASS(klass),
@@ -341,10 +360,12 @@ static void scalar_display_update_label_text(ScalarDisplay *self)
    if (scalar_display_get_has_error(self))
    {
       snprintf(label_str, sizeof(label_str), "<span foreground='red'>ERROR</span>");
-   } else if (scalar_display_get_value_oor(self))
+   }
+   else if (scalar_display_get_value_oor(self))
    {
       snprintf(label_str, sizeof(label_str), "<span foreground='red'>%s</span>", value_str);
-   } else if (scalar_display_get_uncalibrated(self))
+   }
+   else if (scalar_display_get_uncalibrated(self))
    {
       snprintf(label_str, sizeof(label_str), "<span foreground='orange'>%s</span>", value_str);
    }

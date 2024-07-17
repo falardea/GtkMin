@@ -117,6 +117,7 @@ app_widget_ref_struct *app_builder(void) {
    gtk_box_pack_end(GTK_BOX(appWidgetsT->w_scalar_display_anchor), appWidgetsT->w_the_scalar_display, TRUE, TRUE, 10);
    gtk_box_pack_start(GTK_BOX(appWidgetsT->w_batt_indicator_anchor), appWidgetsT->w_the_batt_indicator, TRUE, TRUE, 10);
 
+   // Gross... we
    g_object_bind_property(appWidgetsT->w_the_dial, "old_value", appWidgetsT->w_dial_listener_label, "value", G_BINDING_DEFAULT);
    g_object_bind_property(appWidgetsT->w_dial_listener_label, "value", appWidgetsT->w_the_scalar_display, "value", G_BINDING_DEFAULT);
    g_object_bind_property(appWidgetsT->w_dial_listener_label, "value", appWidgetsT->w_the_batt_indicator, "value", G_BINDING_DEFAULT);
@@ -132,9 +133,6 @@ app_widget_ref_struct *app_builder(void) {
 
    g_signal_connect (G_OBJECT(appWidgetsT->w_the_scalar_display), "scalar-display-pressed",
                      G_CALLBACK(on_scalar_clicked), appWidgetsT);
-
-   g_signal_connect (G_OBJECT(appWidgetsT->w_the_scalar_display), "button-press-event",
-                     G_CALLBACK(on_component_clicked), appWidgetsT);
 
    g_signal_connect (G_OBJECT(appWidgetsT->w_the_batt_indicator), "button-press-event",
                      G_CALLBACK(on_component_clicked), appWidgetsT);

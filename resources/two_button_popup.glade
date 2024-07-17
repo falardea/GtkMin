@@ -87,7 +87,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_btn_accept_clicked" swapped="no"/>
+                <signal name="clicked" handler="on_btn_accept_clicked" object="TwoButtonPopup" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -101,7 +101,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_btn_reject_clicked" swapped="no"/>
+                <signal name="clicked" handler="on_btn_reject_clicked" object="TwoButtonPopup" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -117,6 +117,11 @@
           </packing>
         </child>
       </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
     </child>
   </template>
 </interface>

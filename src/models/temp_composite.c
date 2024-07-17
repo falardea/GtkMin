@@ -13,6 +13,8 @@ struct _TempComposite
 
    gchar    *name;
 
+//   Temp1ExampleCallback_T   *user_return_callback;
+   void (*user_return_callback) (GtkResponseType prompt_response);
 //   gboolean (* btn_press_event) (GtkWidget *widget, GdkEventButton *event, gpointer user_data);
 };
 
@@ -53,10 +55,11 @@ static void temp_composite_get_property( GObject *object, guint prop_id, GValue 
 
 static GParamSpec *temp_composite_properties[N_TEMP_COMPOSITE_PROPERTIES] = {NULL, };
 
-gboolean btn_press_event(__attribute__((unused))GtkWidget *widget,__attribute__((unused)) GdkEventButton *event,__attribute__((unused)) gpointer user_data)
+gboolean btn_press_event(__attribute__((unused))GtkWidget *widget,__attribute__((unused)) GdkEventButton *event, gpointer user_data)
 {
-   logging_llprintf(LOGLEVEL_DEBUG, "%s", __func__);
-
+   g_return_val_if_fail(TEMP_IS_COMPOSITE(user_data), FALSE);
+   TempComposite *comp = (TempComposite *) user_data;
+   (* comp->user_return_callback)(GTK_RESPONSE_YES);
    return FALSE;
 }
 
@@ -66,13 +69,9 @@ static void temp_composite_class_init(TempCompositeClass *klass)
    GObjectClass *o_class = G_OBJECT_CLASS(klass);
    GtkWidgetClass *w_class = (GtkWidgetClass *) klass;
 
-//   parent_class = g_type_class_ref(gtk_widget_get_type());
-
    gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS (klass), "/mini_app/resources/temp_composite.glade");
    gtk_widget_class_bind_template_child(w_class, TempComposite , name_label);
    gtk_widget_class_bind_template_callback_full(w_class, "btn_press_event", (GCallback)btn_press_event);
-
-//   w_class->realize = temp_composite_realize;
 
    o_class->finalize = temp_composite_finalize;
    o_class->set_property = temp_composite_set_property;
@@ -98,13 +97,17 @@ static void temp_composite_finalize(GObject *self)
    G_OBJECT_CLASS (temp_composite_parent_class)->finalize (self);
 }
 
-GtkWidget *temp_composite_new(const gchar *new_name)
+GtkWidget *temp_composite_new(const gchar *new_name, TempExampleCallback_T return_to)
 {
    TempComposite *comp;
    comp = g_object_new(temp_composite_get_type(), NULL);
    if (new_name != NULL)
    {
       temp_composite_set_name(comp, new_name);
+   }
+   if (return_to != NULL)
+   {
+      comp->user_return_callback = return_to;
    }
 
    return GTK_WIDGET(comp);
@@ -128,28 +131,3 @@ void temp_composite_set_name( TempComposite *self, const gchar *name )
    self->name = g_strdup( name );
    gtk_label_set_label(self->name_label, temp_composite_get_name(self));
 }
-
-
-//static void temp_composite_realize(GtkWidget *widget)
-//{
-//   GdkWindowAttr  win_attr;
-//   GtkAllocation  alloc;
-//   gint           attr_mask;
-//
-//   g_return_if_fail(widget != NULL);
-//   g_return_if_fail(TEMP_IS_COMPOSITE(widget));
-//
-//   gtk_widget_set_realized(widget, TRUE);
-//   gtk_widget_get_allocation(widget, &alloc);
-//   win_attr.x = alloc.x;
-//   win_attr.y = alloc.y;
-//   win_attr.width = alloc.width;
-//   win_attr.height = alloc.height;
-//   win_attr.wclass = GDK_INPUT_OUTPUT;
-//   win_attr.window_type = GDK_WINDOW_CHILD;
-//   win_attr.event_mask = gtk_widget_get_events(widget) | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-//   win_attr.visual = gtk_widget_get_visual(widget);
-//   attr_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
-//   gtk_widget_set_window(widget, gdk_window_new(gtk_widget_get_parent_window(widget), &win_attr, attr_mask));
-//   gdk_window_set_user_data(gtk_widget_get_window(widget), widget);
-//}

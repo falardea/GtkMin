@@ -11,7 +11,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-        <signal name="button-press-event" handler="btn_press_event" swapped="no"/>
+        <signal name="button-press-event" handler="btn_press_event" object="TempComposite" swapped="no"/>
         <child>
           <object class="GtkLabel" id="name_label">
             <property name="visible">True</property>
