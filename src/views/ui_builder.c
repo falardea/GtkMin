@@ -98,6 +98,8 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_composite_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "composite_anchor"));
    appWidgetsT->w_custom_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "custom_anchor"));
    appWidgetsT->w_scalar_display_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "scalar_display_anchor"));
+   appWidgetsT->w_scalar_pressure_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "scalar_pressure_anchor"));
+   appWidgetsT->w_scalar_flowrate_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "scalar_flowrate_anchor"));
 
    appWidgetsT->w_batt_indicator_anchor = GTK_WIDGET(gtk_builder_get_object(builder, "batt_indicator_anchor"));
 
@@ -107,15 +109,20 @@ app_widget_ref_struct *app_builder(void) {
 
    appWidgetsT->w_ttt = tictactoe_new();
    appWidgetsT->w_the_dial = gtk_dial_new (adjustment);
-   appWidgetsT->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, "%1.1f");
-   appWidgetsT->w_the_scalar_display = scalar_display_new("Battery", "% charge", "%1.1f");
+   appWidgetsT->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, 1);
+   appWidgetsT->w_the_scalar_display = scalar_display_new("Battery", "% charge", 1);
+   appWidgetsT->w_the_pressure_display = scalar_display_new("Pressure", "mmHg", 1);
+   appWidgetsT->w_the_flowrate_display = scalar_display_new("Flowrate", "ml/min", 2);
    appWidgetsT->w_the_batt_indicator = battery_indicator_new();
 
    gtk_container_add(GTK_CONTAINER(appWidgetsT->w_composite_anchor), appWidgetsT->w_ttt);
    gtk_box_pack_start(GTK_BOX(appWidgetsT->w_custom_anchor), appWidgetsT->w_the_dial, TRUE, TRUE, 10);
    gtk_box_pack_end(GTK_BOX(appWidgetsT->w_custom_anchor), appWidgetsT->w_dial_listener_label, FALSE, TRUE, 0);
-   gtk_box_pack_end(GTK_BOX(appWidgetsT->w_scalar_display_anchor), appWidgetsT->w_the_scalar_display, TRUE, TRUE, 10);
    gtk_box_pack_start(GTK_BOX(appWidgetsT->w_batt_indicator_anchor), appWidgetsT->w_the_batt_indicator, TRUE, TRUE, 10);
+
+   gtk_box_pack_end(GTK_BOX(appWidgetsT->w_scalar_display_anchor), appWidgetsT->w_the_scalar_display, TRUE, TRUE, 10);
+   gtk_box_pack_end(GTK_BOX(appWidgetsT->w_scalar_pressure_anchor), appWidgetsT->w_the_pressure_display, TRUE, TRUE, 10);
+   gtk_box_pack_end(GTK_BOX(appWidgetsT->w_scalar_flowrate_anchor), appWidgetsT->w_the_flowrate_display, TRUE, TRUE, 10);
 
    // Gross... we
    g_object_bind_property(appWidgetsT->w_the_dial, "old_value", appWidgetsT->w_dial_listener_label, "value", G_BINDING_DEFAULT);
@@ -137,9 +144,9 @@ app_widget_ref_struct *app_builder(void) {
    g_signal_connect (G_OBJECT(appWidgetsT->w_the_batt_indicator), "button-press-event",
                      G_CALLBACK(on_component_clicked), appWidgetsT);
 
-   gtk_widget_show(appWidgetsT->w_dial_listener_label);
+   // It appears the composite/custom widgets with templates are loaded and show, where these
+   // seem to need explicit exposure.
    gtk_widget_show(appWidgetsT->w_the_dial);
-   gtk_widget_show(appWidgetsT->w_the_scalar_display);
    gtk_widget_show(appWidgetsT->w_the_batt_indicator);
    gtk_widget_show(appWidgetsT->w_ttt);
 

@@ -47,13 +47,10 @@ typedef struct {
 
    GtkWidget   *w_composite_anchor;
    GtkWidget   *w_custom_anchor;
-   GtkWidget   *w_scalar_display_anchor;
 
    GtkWidget   *w_ttt;
    GtkWidget   *w_the_dial;
    GtkWidget   *w_dial_listener_label;
-
-   GtkWidget   *w_the_scalar_display;
 
    GtkWidget   *w_batt_indicator_anchor;
    GtkWidget   *w_the_batt_indicator;
@@ -63,6 +60,15 @@ typedef struct {
 
    GtkWidget   *w_temp_widget_anchor;
    GtkWidget   *w_temp_composite;
+
+   GtkWidget   *w_scalar_display_anchor;
+   GtkWidget   *w_scalar_pressure_anchor;
+   GtkWidget   *w_scalar_flowrate_anchor;
+
+   GtkWidget   *w_the_scalar_display;
+   GtkWidget   *w_the_pressure_display;
+   GtkWidget   *w_the_flowrate_display;
+
    /*
     GtkWidget   *w_
     */

@@ -17,7 +17,7 @@ enum {
    SCALAR_DISPLAY_PROP_NAME_STR,
    SCALAR_DISPLAY_PROP_UNITS_STR,
    SCALAR_DISPLAY_PROP_VALUE,
-   SCALAR_DISPLAY_PROP_STR_FORMAT,
+   SCALAR_DISPLAY_PROP_FORMAT_PRECISION,
    SCALAR_DISPLAY_PROP_HAS_ERROR,
    SCALAR_DISPLAY_PROP_VALUE_OOR,
    SCALAR_DISPLAY_PROP_UNCALIBRATED,
@@ -33,7 +33,7 @@ struct _ScalarDisplay
 
    gchar          *name_str;
    gchar          *units_str;
-   gchar          *format_str;
+   guint          format_precision;
 
    gdouble        value;
 
@@ -82,8 +82,8 @@ static void scalar_display_set_property(GObject *object, guint prop_id, const GV
       case SCALAR_DISPLAY_PROP_VALUE:
          scalar_display_set_value( scalar, g_value_get_double ( value ) );
          break;
-      case SCALAR_DISPLAY_PROP_STR_FORMAT:
-         scalar_display_set_format_str(scalar, g_value_get_string( value ));
+      case SCALAR_DISPLAY_PROP_FORMAT_PRECISION:
+         scalar_display_set_precision(scalar, g_value_get_uint( value ));
          break;
       case SCALAR_DISPLAY_PROP_HAS_ERROR:
          scalar_display_set_has_error(scalar, g_value_get_boolean( value ));
@@ -114,8 +114,8 @@ static void scalar_display_get_property(GObject *object, guint prop_id, GValue *
       case SCALAR_DISPLAY_PROP_VALUE:
          g_value_set_double(value, scalar_display_get_value(scalar));
          break;
-      case SCALAR_DISPLAY_PROP_STR_FORMAT:
-         g_value_set_string(value, scalar_display_get_format_str(scalar));
+      case SCALAR_DISPLAY_PROP_FORMAT_PRECISION:
+         g_value_set_uint(value, scalar_display_get_precision(scalar));
          break;
       case SCALAR_DISPLAY_PROP_HAS_ERROR:
          g_value_set_boolean(value, scalar_display_get_has_error(scalar));
@@ -157,7 +157,7 @@ static void scalar_display_class_init(ScalarDisplayClass *klass)
    gobject_class->set_property = scalar_display_set_property;
 
    scalar_display_properties[SCALAR_DISPLAY_PROP_VALUE] = g_param_spec_double("value", NULL, NULL, -INFINITY, INFINITY, 0, G_PARAM_READWRITE );
-   scalar_display_properties[SCALAR_DISPLAY_PROP_STR_FORMAT] = g_param_spec_string("str_format", NULL, NULL, NULL, G_PARAM_READWRITE );
+   scalar_display_properties[SCALAR_DISPLAY_PROP_FORMAT_PRECISION] = g_param_spec_uint("format_precision", NULL, NULL, 0, G_MAXINT, 0, G_PARAM_READWRITE );
    scalar_display_properties[SCALAR_DISPLAY_PROP_NAME_STR] = g_param_spec_string("name_str", NULL, NULL, NULL, G_PARAM_READWRITE );
    scalar_display_properties[SCALAR_DISPLAY_PROP_UNITS_STR] = g_param_spec_string("units_str", NULL, NULL, NULL, G_PARAM_READWRITE );
 
@@ -177,7 +177,7 @@ static void scalar_display_init(ScalarDisplay *self)
 
    scalar_display_set_name_str(self, "UNNAMED");
    scalar_display_set_units_str(self, "UOM");
-   scalar_display_set_format_str(self, "%f");
+   scalar_display_set_precision(self, 0);
    scalar_display_set_has_error(self, FALSE);
    scalar_display_set_value_oor(self, FALSE); // True on startup??
    scalar_display_set_uncalibrated(self, TRUE);
@@ -185,7 +185,7 @@ static void scalar_display_init(ScalarDisplay *self)
    scalar_display_set_value(self, NAN);
 }
 
-GtkWidget* scalar_display_new(const char* scalar_name, const char* scalar_units, const char* format_str)
+GtkWidget* scalar_display_new(const char* scalar_name, const char* scalar_units, guint scalar_precision)
 {
    ScalarDisplay *scalar;
    scalar = g_object_new(scalar_display_get_type(), NULL);
@@ -202,10 +202,7 @@ GtkWidget* scalar_display_new(const char* scalar_name, const char* scalar_units,
    }
    gtk_label_set_label(GTK_LABEL(scalar->units_label), scalar->units_str);
 
-   if(format_str && strcmp(format_str, "") != 0)
-   {
-      scalar_display_set_format_str(scalar, format_str);
-   }
+   scalar_display_set_precision(scalar, scalar_precision);
 
    gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(scalar)), "scalar_display");
 
@@ -220,7 +217,6 @@ static void scalar_display_finalize( GObject *self )
 
    if (scalar->name_str != NULL) g_free(scalar->name_str);
    if (scalar->units_str != NULL) g_free(scalar->units_str);
-   if (scalar->format_str != NULL) g_free(scalar->format_str);
 
    G_OBJECT_CLASS(scalar_display_parent_class)->finalize (self);
 }
@@ -263,22 +259,19 @@ void  scalar_display_set_units_str (ScalarDisplay *self, const char* units)
    self->units_str = g_strdup(units);
 }
 
-const char* scalar_display_get_format_str(ScalarDisplay *self)
+guint scalar_display_get_precision(ScalarDisplay *self)
 {
-   g_return_val_if_fail(self != NULL, NULL);
-   g_return_val_if_fail(SCALAR_IS_DISPLAY(self), NULL);
+   g_return_val_if_fail(self != NULL, 0);
+   g_return_val_if_fail(SCALAR_IS_DISPLAY(self), 0);
 
-   return g_strdup(self->format_str);
+   return self->format_precision;
 }
-void scalar_display_set_format_str(ScalarDisplay *self, const char* disp_format)
+void scalar_display_set_precision(ScalarDisplay *self, guint scalar_precision)
 {
    g_return_if_fail(self != NULL);
    g_return_if_fail(SCALAR_IS_DISPLAY(self));
-   g_return_if_fail(disp_format != NULL);
 
-   if(self->format_str != NULL)
-      g_free(self->format_str);
-   self->format_str = g_strdup(disp_format);
+   self->format_precision = scalar_precision;
 }
 
 gdouble scalar_display_get_value(ScalarDisplay *self)
@@ -349,7 +342,7 @@ static void scalar_display_update_label_text(ScalarDisplay *self)
 
    if (!isnan(self->value))
    {
-      snprintf(value_str, sizeof (value_str), self->format_str, self->value);
+      snprintf(value_str, sizeof (value_str), "%.*f", self->format_precision, self->value);
    }
    else
    {

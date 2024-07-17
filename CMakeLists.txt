@@ -31,7 +31,7 @@ set(CSS_OUTFILE                     ${STYLE_DIR}/${CSS_TARGET})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
-add_compile_options(${CMAKE_C_FLAGS} ${CMAKE_CXX_FLAGS} -Wall -Wextra -rdynamic)
+add_compile_options(${CMAKE_C_FLAGS} ${CMAKE_CXX_FLAGS} -Wall -Wextra -rdynamic -Werror=format-nonliteral)
 add_link_options(-rdynamic)
 
 add_custom_command(OUTPUT ${CSS_OUTFILE} COMMAND sassc -t expanded ${SCSS_SOURCE} ${CSS_OUTFILE})

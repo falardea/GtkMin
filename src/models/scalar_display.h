@@ -14,7 +14,7 @@ G_BEGIN_DECLS // C++ guard, from gmacros.h
 
 GtkWidget*           scalar_display_new               (const char* scalar_name,
                                                        const char* scalar_units,
-                                                       const char* format_str);
+                                                       guint scalar_precision);
 
 gchar                *scalar_display_get_name_str     (ScalarDisplay *self);
 void                 scalar_display_set_name_str      (ScalarDisplay *self, const char* name);
@@ -25,8 +25,8 @@ void                 scalar_display_set_units_str     (ScalarDisplay *self, cons
 gdouble              scalar_display_get_value         (ScalarDisplay *self);
 void                 scalar_display_set_value         (ScalarDisplay *self, gdouble new_value);
 
-const char*          scalar_display_get_format_str    (ScalarDisplay *self);
-void                 scalar_display_set_format_str    (ScalarDisplay *self, const char* disp_format);
+guint                scalar_display_get_precision     (ScalarDisplay *self);
+void                 scalar_display_set_precision     (ScalarDisplay *self, guint scalar_precision);
 
 gboolean             scalar_display_get_uncalibrated  (ScalarDisplay *self);
 void                 scalar_display_set_uncalibrated  (ScalarDisplay *self, gboolean is_uncalibrated);
