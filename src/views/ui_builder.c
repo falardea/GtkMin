@@ -112,7 +112,7 @@ app_widget_ref_struct *app_builder(void) {
    appWidgetsT->w_dial_listener_label = numeric_label_new(DIAL_INIT_VALUE, 1);
    appWidgetsT->w_the_scalar_display = scalar_display_new("Battery", "% charge", 1);
    appWidgetsT->w_the_pressure_display = scalar_display_new("Pressure", "mmHg", 1);
-   appWidgetsT->w_the_flowrate_display = scalar_display_new("Flowrate", "ml/min", 2);
+   appWidgetsT->w_the_flowrate_display = scalar_display_new(NULL, NULL, 1);
    appWidgetsT->w_the_batt_indicator = battery_indicator_new();
 
    gtk_container_add(GTK_CONTAINER(appWidgetsT->w_composite_anchor), appWidgetsT->w_ttt);
@@ -134,12 +134,14 @@ app_widget_ref_struct *app_builder(void) {
    // ********************************************************************************
    // signals and bindings
    // ********************************************************************************
+   g_signal_connect (G_OBJECT(appWidgetsT->w_the_scalar_display), "scalar-display-pressed",
+                     G_CALLBACK(on_scalar_clicked), appWidgetsT);
+
    gtk_builder_connect_signals(builder, appWidgetsT);
 
    g_signal_connect (G_OBJECT(appWidgetsT->w_ttt), "tictactoe", G_CALLBACK(win), NULL);
 
-   g_signal_connect (G_OBJECT(appWidgetsT->w_the_scalar_display), "scalar-display-pressed",
-                     G_CALLBACK(on_scalar_clicked), appWidgetsT);
+
 
    g_signal_connect (G_OBJECT(appWidgetsT->w_the_batt_indicator), "button-press-event",
                      G_CALLBACK(on_component_clicked), appWidgetsT);

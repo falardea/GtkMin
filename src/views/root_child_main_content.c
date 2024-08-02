@@ -7,6 +7,7 @@
 #include "views/root_child_msgout.h"
 #include "models/two_button_popup_overlay.h"
 #include "models/temp_composite.h"
+#include "models/scalar_display.h"
 
 static const gchar *label_str = "FOOBITTY";
 
@@ -38,6 +39,7 @@ void on_do_something_button_clicked(__attribute__((unused)) GtkButton *button, _
       print_log_level_msgout(LOGLEVEL_DEBUG, "boink!");
    }
 
+   scalar_display_set_value(SCALAR_DISPLAY(wdgts->w_the_flowrate_display), -1);
    GtkWidget *popup = two_button_popup_new("This is a test", "This is a test of the two button popup and flavoring it on "
                                                              "creation", "You Rock", "WTF!", (TempExampleCallback_T)temp_callback);
    gtk_overlay_add_overlay(GTK_OVERLAY(wdgts->w_home_page_overlay), popup);

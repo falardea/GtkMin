@@ -166,29 +166,36 @@ static gboolean battery_indicator_draw(GtkWidget *widget, cairo_t *cr)
 
    // The outline
    int marg = 2;
+   int batt_top_height = 10;
+   int batt_top_width = 15;
    int pad = 10;
    int line_width = 4;
    cairo_set_source_rgba(cr, 0.0, 255, 0.0, 1.0);
    cairo_set_line_width(cr, line_width);
+
    // Note to self, these are absolute coords of widget area, not relative movement of a pen.
    // you could use cairo_rel_line_to if we want to use relative from the move_to
-   cairo_move_to(cr, 0 + marg, 0 + marg);
-   cairo_line_to(cr, width - marg, 0 + marg);
-   cairo_line_to(cr, width - marg, height - marg);
-   cairo_line_to(cr, 0 + marg, height - marg);
-   cairo_line_to(cr, 0 + marg, 0 + marg);
-   cairo_line_to(cr, 0 + marg + line_width, 0 + marg); // to eliminate a weird missing pixel in the last corner
+   cairo_move_to(cr, 0 + marg,                        0 + marg);
+   cairo_line_to(cr, width - marg,                    0 + marg);
+   cairo_line_to(cr, width - marg,                    height - marg - batt_top_height);
+   cairo_line_to(cr, width - marg - batt_top_width,   height - marg - batt_top_height);
+   cairo_line_to(cr, width - marg - batt_top_width,   height - marg);
+   cairo_line_to(cr, marg + batt_top_width,           height - marg);
+   cairo_line_to(cr, marg + batt_top_width,           height - marg - batt_top_height);
+   cairo_line_to(cr, 0 + marg,                        height - marg - batt_top_height);
+   cairo_line_to(cr, 0 + marg,                        0 + marg);
+   cairo_line_to(cr, 0 + marg + line_width,           0 + marg); // to eliminate a weird missing pixel in the last corner
    cairo_stroke(cr);
 
    // The "level"
-   gdouble eff_w = width - 2*pad;
+   gdouble eff_w = height - 2*pad - batt_top_height;
    gdouble eff_v = eff_w * (batt->value/100);
-   cairo_move_to(cr, pad, pad);
-   cairo_line_to(cr, eff_v + pad, pad);
-   cairo_line_to(cr, eff_v + pad, height - pad);
-   cairo_line_to(cr, pad, height - pad);
-   cairo_line_to(cr, pad, pad);
-   cairo_line_to(cr, pad, pad);
+   cairo_move_to(cr, pad,           pad);
+   cairo_line_to(cr, pad,           eff_v + pad);
+   cairo_line_to(cr, width - pad,   eff_v + pad);
+   cairo_line_to(cr, width - pad,   pad);
+   cairo_line_to(cr, pad,           pad);
+   cairo_line_to(cr, pad,           pad);
    cairo_fill(cr);
 
    return FALSE;
