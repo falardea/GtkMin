@@ -95,6 +95,8 @@ set(MY_SOURCES
       src/models/two_button_popup_overlay.c
       src/models/temp_composite.c
       src/models/temp_composite.h
+    src/models/my_int.h
+    src/models/my_int.c
 )
 
 include_directories(${PROJECT_SOURCE_DIR})
