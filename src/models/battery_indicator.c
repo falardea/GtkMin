@@ -160,7 +160,7 @@ static gboolean battery_indicator_draw(GtkWidget *widget, cairo_t *cr)
    int width = gtk_widget_get_allocated_width(widget);
    int height = gtk_widget_get_allocated_height(widget);
    GtkStyleContext  *context = gtk_widget_get_style_context(widget);
-   gtk_render_background(context, cr, 0, 0, width, height);
+   // gtk_render_background(context, cr, 0, 0, width, height);
    gtk_render_frame(context, cr, 0, 0, width, height);
    gtk_style_context_add_class(gtk_widget_get_style_context(widget), "battery-indicator-class");
 
